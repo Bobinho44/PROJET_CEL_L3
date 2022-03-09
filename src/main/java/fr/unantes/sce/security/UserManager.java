@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserManager {
-    private Map<String, Person> namesToUsers;
-    private Map<String, String> usersToPasswords;
+    private UserManagement userManaging;
+    private PasswordManagement passwordManaging;
 
     public UserManager() {
-        namesToUsers = new HashMap<>();
-        usersToPasswords = new HashMap<>();
+        userManaging = new UserManagement();
+        passwordManaging = new PasswordManagement();
     }
 
     /**
@@ -20,7 +20,7 @@ public class UserManager {
      * @return True if the user is registered, False otherwise
      */
     public boolean hasUser(Person person) {
-        return namesToUsers.containsKey(person.getName());
+        return userManaging.hasUser(person);
     }
 
     /**
@@ -31,12 +31,7 @@ public class UserManager {
      * @throws IllegalArgumentException
      */
     public boolean addUser(Person person, String password) throws IllegalArgumentException {
-        if (namesToUsers.containsKey(person.getName())) {
-            throw new IllegalArgumentException("Invalid argument: the person is already registered.");
-        }
-        namesToUsers.put(person.toString(), person);
-        usersToPasswords.put(person.getName(), encryptPassword(password));
-        return true;
+        return userManaging.addUser(person, password, passwordManaging);
     }
 
     /**
@@ -45,12 +40,7 @@ public class UserManager {
      * @return True if everything went smoothly, False otherwise
      */
     public boolean removeUser(Person person) {
-        if (namesToUsers.containsKey(person.getName())) {
-            Person p = namesToUsers.get(person.getName());
-            usersToPasswords.remove(p.getName());
-            namesToUsers.remove(p.getName());
-        }
-        return true;
+        return userManaging.removeUser(person, passwordManaging.getUsersToPasswords());
     }
 
     /**
@@ -60,12 +50,7 @@ public class UserManager {
      * @return True if the password is valid, false otherwise
      */
     public boolean validatePassword(Person person, String password) {
-        if (namesToUsers.containsKey(person.getName())) {
-            Person p = namesToUsers.get(person.getName());
-            String reference = usersToPasswords.get(p.getName());
-            return decryptPassword(reference).equals(password);
-        }
-        return false;
+        return passwordManaging.validatePassword(person, password, userManaging.getNamesToUsers());
     }
 
     /**
@@ -75,10 +60,7 @@ public class UserManager {
      * @throws IllegalArgumentException
      */
     private String encryptPassword(String password) throws IllegalArgumentException {
-        if (password.contains("a")) {
-            throw new IllegalArgumentException("The password contains unsecure characters, cannot perform encryption.");
-        }
-        return password.replaceAll("a", "e");
+        return passwordManaging.getEncryptPassword(password);
     }
 
     /**
@@ -87,6 +69,14 @@ public class UserManager {
      * @return Decrypted password
      */
     private String decryptPassword(String encrypted) {
-        return encrypted.replaceAll("e", "a");
+        return passwordManaging.getDecryptPassword(encrypted);
+    }
+
+    public String getDecryptPassword(String encrypted) {
+        return decryptPassword(encrypted);
+    }
+
+    public String getEncryptPassword(String encrypted) {
+        return encryptPassword(encrypted);
     }
 }
