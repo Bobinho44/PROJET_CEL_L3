@@ -1,15 +1,21 @@
 package fr.unantes.sce.calendar;
 
+import org.atlanmod.commons.Guards;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Correspondence {
+
     private Travel travel;
     private City startCity;
     private City destinationCity;
-    private int startTime;
-    private int arrivalTime;
+    private LocalDate startTime;
+    private LocalDate arrivalTime;
 
-    public Correspondence(Travel travel, City startCity, City destinationCity, int startTime, int arrivalTime) {
+    public Correspondence(Travel travel, City startCity, City destinationCity, LocalDate startTime, LocalDate arrivalTime) {
+        Guards.checkArgument(startTime.isBefore(arrivalTime), "arrivalTime is before startTime!");
+
         this.travel = travel;
         this.startCity = startCity;
         this.destinationCity = destinationCity;
@@ -41,19 +47,23 @@ public class Correspondence {
         this.destinationCity = destinationCity;
     }
 
-    public int getStartTime() {
+    public LocalDate getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(LocalDate startTime) {
+        Guards.checkArgument(startTime.isBefore(getArrivalTime()), "startTime is after this correspondence arrivalTime!");
+
         this.startTime = startTime;
     }
 
-    public int getArrivalTime() {
+    public LocalDate getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(int arrivalTime) {
+    public void setArrivalTime(LocalDate arrivalTime) {
+        Guards.checkArgument(arrivalTime.isAfter(getStartTime()), "arrivalTime is before this correspondence startTime!");
+
         this.arrivalTime = arrivalTime;
     }
 
@@ -72,4 +82,5 @@ public class Correspondence {
     public int hashCode() {
         return Objects.hash(getTravel(), getStartCity(), getDestinationCity(), getStartTime(), getArrivalTime());
     }
+
 }
