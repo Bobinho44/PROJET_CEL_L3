@@ -1,17 +1,18 @@
 package fr.unantes.sce.calendar;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * A Travel goes from one place to another, with a departure date and an arrival date
  */
 public class Travel {
-    private Vector steps;
+    private List<Correspondence> steps = new ArrayList<>();
     private Calendar parent;
 
     public Travel(Calendar parent) {
         this.parent = parent;
-        steps = new Vector();
     }
 
     public Calendar getParent() {
@@ -20,6 +21,10 @@ public class Travel {
 
     public void setParent(Calendar parent) {
         this.parent = parent;
+    }
+
+    public List<Correspondence> getSteps() {
+        return steps;
     }
 
     public Correspondence getFirstStep() {

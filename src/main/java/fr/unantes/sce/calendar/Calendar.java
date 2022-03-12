@@ -2,18 +2,19 @@ package fr.unantes.sce.calendar;
 
 import fr.unantes.sce.people.Person;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * A Calendar stores a list of travels for an agent
  */
 public class Calendar {
-    private Vector travels;
+    private List<Travel> travels = new ArrayList<>();
     private Person owner;
 
     public Calendar(Person owner) {
         this.owner = owner;
-        travels = new Vector();
     }
 
     public Person getOwner() {
@@ -31,4 +32,9 @@ public class Calendar {
     public boolean removeTravel(Travel travel) {
         return travels.remove(travel);
     }
+
+    public List<Travel> getTravels() {
+        return travels;
+    }
+
 }
