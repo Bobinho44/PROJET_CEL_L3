@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class PasswordManagement {
   private Map<String, String> usersToPasswords;
+  private AES256 encrypter;
 
       public PasswordManagement(){
         usersToPasswords = new HashMap<>();
@@ -34,10 +35,7 @@ public class PasswordManagement {
        * @throws IllegalArgumentException
        */
       private String encryptPassword(String password) throws IllegalArgumentException {
-          if (password.contains("a")) {
-              throw new IllegalArgumentException("The password contains unsecure characters, cannot perform encryption.");
-          }
-          return password.replaceAll("a", "e");
+            return encrypter.encrypt(password);
       }
 
       /**
@@ -46,7 +44,7 @@ public class PasswordManagement {
        * @return Decrypted password
        */
       private String decryptPassword(String encrypted) {
-          return encrypted.replaceAll("e", "a");
+          return encrypter.decrypt(encrypted);
       }
 
       public Map<String, String> getUsersToPasswords() {
