@@ -1,26 +1,32 @@
 package fr.unantes.sce.calendar;
 
+import fr.unantes.sce.wrapper.MonoValuedReference;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
- * A Travel goes from one place to another, with a departure date and an arrival date
+ * Travel goes from one place to another, with a departure date and an arrival date
  */
 public class Travel {
+
     private List<Correspondence> steps = new ArrayList<>();
-    private Calendar parent;
+    private final MonoValuedReference<Calendar> parent = new MonoValuedReference<>();
 
     public Travel(Calendar parent) {
-        this.parent = parent;
+        setParent(parent);
     }
 
-    public Calendar getParent() {
+    public MonoValuedReference<Calendar> parent() {
         return parent;
     }
 
     public void setParent(Calendar parent) {
-        this.parent = parent;
+        if (parent().get() != null) {
+            parent().get().removeTravel(this);
+        }
+        parent().set(parent);
+        parent.travels().add(this);
     }
 
     public List<Correspondence> getSteps() {
@@ -42,4 +48,5 @@ public class Travel {
     public boolean removeCorrespondence(Correspondence step) {
         return steps.remove(step);
     }
+
 }

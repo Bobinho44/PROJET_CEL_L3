@@ -24,17 +24,17 @@ class CorrespondenceTest {
     }
 
     @Test
-    void getStartTime_AdditionDone_True() {
+    void getStartTime_GettingDone_True() {
         Assertions.assertEquals(LocalDate.of(2000, 2, 15), correspondence.getStartTime());
     }
 
     @Test
-    void getArrivalTime_AdditionDone_True() {
+    void getArrivalTime_GettingDone_True() {
         Assertions.assertEquals(LocalDate.of(2000, 2, 16), correspondence.getArrivalTime());
     }
 
     @Test
-    void setStartTime_AdditionDone_True() {
+    void setStartTime_SettingDone_True() {
         correspondence.setStartTime(LocalDate.of(2000, 2, 14));
 
         Assertions.assertEquals(LocalDate.of(2000, 2, 14), correspondence.getStartTime());
@@ -42,7 +42,7 @@ class CorrespondenceTest {
     }
 
     @Test
-    void setArrivalTime_AdditionDone_True() {
+    void setArrivalTime_SettingDone_True() {
         correspondence.setArrivalTime(LocalDate.of(2000, 2, 17));
 
         Assertions.assertEquals(LocalDate.of(2000, 2, 15), correspondence.getStartTime());

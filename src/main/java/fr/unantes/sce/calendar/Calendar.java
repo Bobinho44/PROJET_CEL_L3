@@ -1,20 +1,35 @@
 package fr.unantes.sce.calendar;
 
 import fr.unantes.sce.people.Person;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import fr.unantes.sce.wrapper.UpperBoundedMultiValuedReference;
 
 /**
  * A Calendar stores a list of travels for an agent
  */
 public class Calendar {
-    private List<Travel> travels = new ArrayList<>();
+
+    private static final int MAX_TRAVEL_NUMBER_IN_CALENDAR = 10;
+
+    private final UpperBoundedMultiValuedReference<Travel> travels = new UpperBoundedMultiValuedReference<>(MAX_TRAVEL_NUMBER_IN_CALENDAR);
     private Person owner;
 
     public Calendar(Person owner) {
         this.owner = owner;
+    }
+
+    public UpperBoundedMultiValuedReference<Travel> travels() {
+        return travels;
+    }
+
+    public void addTravel(Travel travel) {
+        travel.parent().get().removeTravel(travel);
+        travels().add(travel);
+        travel.parent().set(this);
+    }
+
+    public void removeTravel(Travel travel) {
+        travels().remove(travel);
+        travel.parent().unset();
     }
 
     public Person getOwner() {
@@ -23,18 +38,6 @@ public class Calendar {
 
     public void setOwner(Person owner) {
         this.owner = owner;
-    }
-
-    public boolean addTravel(Travel travel) {
-        return travels.add(travel);
-    }
-
-    public boolean removeTravel(Travel travel) {
-        return travels.remove(travel);
-    }
-
-    public List<Travel> getTravels() {
-        return travels;
     }
 
 }

@@ -12,11 +12,12 @@ class TravelTest {
     private Travel travel;
     private Correspondence correspondence1;
     private Correspondence correspondence2;
+    private Calendar calendar;
 
     @BeforeEach
     void setUp() throws Exception {
         Person person = new Person("Kylian", "agent");
-        Calendar calendar = new Calendar(person);
+        calendar = new Calendar(person);
         travel = new Travel(calendar);
         City city1 = new City("France", "Nantes");
         City city2 = new City("Corée du Sud", "Séoul");
@@ -27,7 +28,7 @@ class TravelTest {
     }
 
     @Test
-    void addTravel_AdditionDone_true() {
+    void addStep_AdditionDone_true() {
         travel.getSteps().add(correspondence1);
         travel.getSteps().add(correspondence2);
 
@@ -36,7 +37,7 @@ class TravelTest {
     }
 
     @Test
-    void removeTravel_DeletionDone_true() {
+    void removeStep_DeletionDone_true() {
         travel.getSteps().add(correspondence1);
         travel.getSteps().add(correspondence2);
 
@@ -45,6 +46,20 @@ class TravelTest {
         travel.getSteps().remove(correspondence1);
 
         Assertions.assertEquals(correspondence2, travel.getFirstStep());
+    }
+
+    @Test
+    void setParent_SettingDone_true() {
+        travel.setParent(calendar);
+
+        Assertions.assertTrue(calendar.travels().contain(travel));
+    }
+
+    @Test
+    void getParent_GettingDone_true() {
+        travel.setParent(calendar);
+
+        Assertions.assertEquals(calendar, travel.parent().get());
     }
 
 }

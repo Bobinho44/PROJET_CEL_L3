@@ -55,14 +55,14 @@ public class Person {
         this.calendar = calendar;
     }
 
-    public boolean addTravelTo(Travel travel, Person agent) throws InvalidClassException {
+    public void addTravelTo(Travel travel, Person agent) throws InvalidClassException {
         if (role.equals("agent")) {
             throw new InvalidClassException("Invalid operation. Only an administrator can add travel to an agent.");
         }
         try {
-            return agent.getCalendar().addTravel(travel);
+            agent.getCalendar().addTravel(travel);
         } catch (InvalidClassException e) {
-            return false;
+            e.printStackTrace();
         }
     }
 
