@@ -11,15 +11,17 @@ import java.util.Objects;
  */
 public class Person {
     public String name;
-    public String role;
+    public Status role;
     protected Calendar calendar;
 
     public Person(String name, String role) throws InvalidClassException {
-        if (!role.equals("agent") && !role.equals("admin")) {
-            throw new InvalidClassException("Invalid role supplied. A person can only be an agent or an admin");
-        }
         this.name = name;
-        this.role = role;
+        calendar=new Calendar(this);
+        switch (role) {
+            case "agent" : this.role =new Agent(this); break;
+            case "admin" : this.role = new Admin(this); break;
+            default : throw new InvalidClassException("Invalid role supplied. A person can only be an agent or an admin");
+        }
     }
 
     public String getName() {
@@ -31,62 +33,32 @@ public class Person {
     }
 
     public String getRole() {
-        return role;
+        return role.getRole();
     }
 
     public void setRole(String role) throws InvalidClassException {
-        if (!role.equals("agent") && !role.equals("admin")) {
-            throw new InvalidClassException("Invalid role supplied. A person can only be an agent or an admin");
-        }
-        this.role = role;
+        this.role = this.role.setRole(role);
     }
 
     public Calendar getCalendar() throws InvalidClassException {
-        if (role.equals("admin")) {
-            throw new InvalidClassException("Invalid operation. Only agent have a calendar");
-        }
-        return calendar;
+        return role.getCalendar();
     }
 
     public void setCalendar(Calendar calendar) throws InvalidClassException {
-        if (role.equals("admin")) {
-            throw new InvalidClassException("Invalid operation. Only agent have a calendar");
-        }
-        this.calendar = calendar;
+        role.setCalendar(calendar);
     }
 
     public void addTravelTo(Travel travel, Person agent) throws InvalidClassException {
-        if (role.equals("agent")) {
-            throw new InvalidClassException("Invalid operation. Only an administrator can add travel to an agent.");
-        }
-        try {
-            agent.getCalendar().addTravel(travel);
-        } catch (InvalidClassException e) {
-            e.printStackTrace();
-        }
+        role.addTravelTo(travel, agent);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        if (getRole().equals(person.getRole()) && role.equals("agent")) {
-            try {
-                return getName().equals(person.getName()) && getCalendar().equals(person.getCalendar());
-            } catch (InvalidClassException e) {
-                return false;
-            }
-        }
-        return getName().equals(person.getName()) && getRole().equals(person.getRole());
+        return this.role.equals(o);
     }
 
     @Override
     public int hashCode() {
-        try {
-            return Objects.hash(getName(), getRole(), getCalendar());
-        } catch (InvalidClassException e) {
-            return Objects.hash(getName(), getRole());
-        }
+        return this.role.hashCode();
     }
 }

@@ -1,5 +1,6 @@
 package fr.unantes.sce.ui;
-
+import fr.unantes.sce.people.Person;
+import fr.unantes.sce.security.UserManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,7 +9,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import fr.unantes.sce.security.UserManager;
+
 public class GUI extends Application  {
+    UserManager loggingManager = new UserManager();
+
     @Override
     public void start(Stage stage) throws Exception {
         GridPane root = new GridPane();
@@ -27,7 +32,11 @@ public class GUI extends Application  {
 
         loginButton.setText("Login");
         loginButton.setOnAction(event -> {
+            if(field1.getText()=="" || field2.getText()==""){
+                System.out.println("Thanks to fill both fields !");
+            } else {
             System.out.println("login with name=" + field1.getText() + " and password=" + field2.getText());
+            }
         });
 
         root.add(lbl1, 0, 0);
