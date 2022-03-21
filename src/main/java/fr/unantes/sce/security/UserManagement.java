@@ -18,7 +18,7 @@ public class UserManagement {
          * @return True if the user is registered, False otherwise
          */
         public boolean hasUser(Person person) {
-            return namesToUsers.containsKey(person.getName());
+            return namesToUsers.containsKey(person.name().get());
         }
 
         /**
@@ -29,11 +29,11 @@ public class UserManagement {
          * @throws IllegalArgumentException
          */
         public boolean addUser(Person person, String password, PasswordManagement pM) throws IllegalArgumentException {
-            if (namesToUsers.containsKey(person.getName())) {
+            if (namesToUsers.containsKey(person.name().get())) {
                 throw new IllegalArgumentException("Invalid argument: the person is already registered.");
             }
             namesToUsers.put(person.toString(), person);
-            pM.getUsersToPasswords().put(person.getName(), pM.getEncryptPassword(password));
+            pM.getUsersToPasswords().put(person.name().get(), pM.getEncryptPassword(password));
             return true;
         }
 
@@ -43,10 +43,10 @@ public class UserManagement {
          * @return True if everything went smoothly, False otherwise
          */
         public boolean removeUser(Person person, Map<String, String> usersToPasswords) {
-            if (namesToUsers.containsKey(person.getName())) {
-                Person p = namesToUsers.get(person.getName());
-                usersToPasswords.remove(p.getName());
-                namesToUsers.remove(p.getName());
+            if (namesToUsers.containsKey(person.name().get())) {
+                Person p = namesToUsers.get(person.name().get());
+                usersToPasswords.remove(p.name().get());
+                namesToUsers.remove(p.name().get());
             }
             return true;
         }

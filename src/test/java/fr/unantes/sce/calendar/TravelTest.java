@@ -1,5 +1,8 @@
 package fr.unantes.sce.calendar;
 
+import fr.unantes.sce.exception.InvalidArgumentException;
+import fr.unantes.sce.exception.MaximumSizeReachedException;
+import fr.unantes.sce.people.Agent;
 import fr.unantes.sce.people.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +18,8 @@ class TravelTest {
     private Calendar calendar;
 
     @BeforeEach
-    void setUp() throws Exception {
-        Person person = new Person("Kylian", "agent");
+    void setUp() throws InvalidArgumentException, MaximumSizeReachedException {
+        Person person = new Person("Kylian", Agent.INSTANCE);
         calendar = new Calendar(person);
         travel = new Travel(calendar);
         City city1 = new City("France", "Nantes");
@@ -49,14 +52,14 @@ class TravelTest {
     }
 
     @Test
-    void setParent_SettingDone_true() {
+    void setParent_SettingDone_true() throws MaximumSizeReachedException {
         travel.setParent(calendar);
 
         Assertions.assertTrue(calendar.travels().contain(travel));
     }
 
     @Test
-    void getParent_GettingDone_true() {
+    void getParent_GettingDone_true() throws MaximumSizeReachedException {
         travel.setParent(calendar);
 
         Assertions.assertEquals(calendar, travel.parent().get());

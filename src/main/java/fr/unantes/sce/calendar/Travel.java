@@ -1,6 +1,7 @@
 package fr.unantes.sce.calendar;
 
-import fr.unantes.sce.wrapper.MonoValuedReference;
+import fr.unantes.sce.exception.MaximumSizeReachedException;
+import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,17 +12,17 @@ import java.util.List;
 public class Travel {
 
     private List<Correspondence> steps = new ArrayList<>();
-    private final MonoValuedReference<Calendar> parent = new MonoValuedReference<>();
+    private final NullableMonoValuedAttribute<Calendar> parent = new NullableMonoValuedAttribute<>();
 
-    public Travel(Calendar parent) {
+    public Travel(Calendar parent) throws MaximumSizeReachedException {
         setParent(parent);
     }
 
-    public MonoValuedReference<Calendar> parent() {
+    public NullableMonoValuedAttribute<Calendar> parent() {
         return parent;
     }
 
-    public void setParent(Calendar parent) {
+    public void setParent(Calendar parent) throws MaximumSizeReachedException {
         if (parent().get() != null) {
             parent().get().removeTravel(this);
         }

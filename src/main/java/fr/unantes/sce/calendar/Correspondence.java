@@ -1,5 +1,6 @@
 package fr.unantes.sce.calendar;
 
+import fr.unantes.sce.exception.InvalidArgumentException;
 import org.atlanmod.commons.Guards;
 
 import java.time.LocalDate;
@@ -13,8 +14,10 @@ public class Correspondence {
     private LocalDate startTime;
     private LocalDate arrivalTime;
 
-    public Correspondence(Travel travel, City startCity, City destinationCity, LocalDate startTime, LocalDate arrivalTime) {
-        Guards.checkArgument(startTime.isBefore(arrivalTime), "arrivalTime is before startTime!");
+    public Correspondence(Travel travel, City startCity, City destinationCity, LocalDate startTime, LocalDate arrivalTime) throws InvalidArgumentException {
+        if (startTime.isAfter(arrivalTime)) {
+            throw new InvalidArgumentException("arrivalTime is before startTime!");
+        }
 
         this.travel = travel;
         this.startCity = startCity;
@@ -51,8 +54,10 @@ public class Correspondence {
         return startTime;
     }
 
-    public void setStartTime(LocalDate startTime) {
-        Guards.checkArgument(startTime.isBefore(getArrivalTime()), "startTime is after this correspondence arrivalTime!");
+    public void setStartTime(LocalDate startTime) throws InvalidArgumentException {
+        if (startTime.isAfter(getArrivalTime())) {
+            throw new InvalidArgumentException("Invalid argument. StartTime is after arrivalTime!");
+        }
 
         this.startTime = startTime;
     }
@@ -61,8 +66,10 @@ public class Correspondence {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalDate arrivalTime) {
-        Guards.checkArgument(arrivalTime.isAfter(getStartTime()), "arrivalTime is before this correspondence startTime!");
+    public void setArrivalTime(LocalDate arrivalTime) throws InvalidArgumentException {
+        if (arrivalTime.isBefore(getStartTime())) {
+            throw new InvalidArgumentException("Invalid argument. ArrivalTime is before startTime!");
+        }
 
         this.arrivalTime = arrivalTime;
     }

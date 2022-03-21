@@ -1,5 +1,8 @@
 package fr.unantes.sce.calendar;
 
+import fr.unantes.sce.exception.InvalidArgumentException;
+import fr.unantes.sce.exception.MaximumSizeReachedException;
+import fr.unantes.sce.people.Agent;
 import fr.unantes.sce.people.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,60 +11,63 @@ import org.junit.jupiter.api.Test;
 class CalendarTest {
 
     private Calendar calendar;
-    private Travel travel;
+    private Travel travel1;
+    private Travel travel2;
 
     @BeforeEach
-    void setUp() throws Exception {
-        Person person = new Person("Kylian", "agent");
+    void setUp() throws MaximumSizeReachedException {
+        Person person = new Person("Kylian", Agent.INSTANCE);
         calendar = new Calendar(person);
-        travel = new Travel(calendar);
+        travel1 = new Travel(calendar);
+        Person person2 = new Person("Alix", Agent.INSTANCE);
+        Calendar calendar2 = new Calendar(person2);
+        travel2 = new Travel(calendar2);
     }
 
     @Test
-    void addTravel_AdditionDone_true() {
-        calendar.addTravel(travel);
+    void addTravel_AdditionDone_true() throws MaximumSizeReachedException {
+        calendar.addTravel(travel1);
 
-        Assertions.assertEquals(travel, calendar.travels().get(0));
+        Assertions.assertEquals(travel1, calendar.travels().get(0));
     }
 
     @Test
     void removeTravel_DeletionDone_true() {
-        calendar.removeTravel(travel);
+        calendar.removeTravel(travel1);
 
         Assertions.assertEquals(0, calendar.travels().size());
     }
 
     @Test
     void addTravel_Add11Travels_ExceptionThrown() {
-        IllegalArgumentException exception = Assertions.assertThrows(
-                IllegalArgumentException.class,
+        MaximumSizeReachedException exception = Assertions.assertThrows(
+                MaximumSizeReachedException.class,
                 () -> {
                     for (int i = 0; i < 10; i++) {
-                        Travel travel2 = new Travel(calendar);
-                        calendar.addTravel(travel2);
+                        new Travel(calendar);
                     }
                 }
         );
 
-        Assertions.assertEquals("values is already full!", exception.getMessage());
+        Assertions.assertEquals("Invalid operation. The multiValuedAttribute is already full!", exception.getMessage());
     }
 
     @Test
-    void addTravel_TravelParentIsSet_true() {
-        calendar.addTravel(travel);
+    void addTravel_TravelParentIsSet_true() throws MaximumSizeReachedException {
+        calendar.addTravel(travel1);
 
-        Assertions.assertEquals(calendar, travel.parent().get());
+        Assertions.assertEquals(calendar, travel1.parent().get());
     }
 
     @Test
     void removeTravel_TravelParentIsUnSet_true() {
-        calendar.removeTravel(travel);
+        calendar.removeTravel(travel1);
 
-        Assertions.assertNull(travel.parent().get());
+        Assertions.assertNull(travel1.parent().get());
     }
 
     @Test
-    void getTravel_GettingDone_true() {
+    void getTravel_GettingDone_true() throws MaximumSizeReachedException {
         for (int i = 0; i < 7; i++) {
             Travel travel2 = new Travel(calendar);
             calendar.addTravel(travel2);
@@ -74,14 +80,10 @@ class CalendarTest {
     void removeTravel_TravelIsNotLinked_ExceptionThrown() {
         IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> {
-                    Person person = new Person("Alix", "agent");
-                    Calendar calendar2 = new Calendar(person);
-                    Travel travel2 = new Travel(calendar2);
-                    calendar.removeTravel(travel2);
-                }
+                () -> calendar.removeTravel(travel2)
         );
 
-        Assertions.assertEquals("this value is not linked to values!", exception.getMessage());
+        Assertions.assertEquals("Invalid operation. The multiValuedAttribute does not contain this value!", exception.getMessage());
     }
+
 }

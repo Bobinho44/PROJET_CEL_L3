@@ -20,9 +20,9 @@ public class PasswordManagement {
        * @return True if the password is valid, false otherwise
        */
       public boolean validatePassword(Person person, String password, Map<String, Person> namesToUsers) {
-          if (namesToUsers.containsKey(person.getName())) {
-              Person p = namesToUsers.get(person.getName());
-              String reference = usersToPasswords.get(p.getName());
+          if (namesToUsers.containsKey(person.name().get())) {
+              Person p = namesToUsers.get(person.name().get());
+              String reference = usersToPasswords.get(p.name().get());
               return decryptPassword(reference).equals(password);
           }
           return false;
