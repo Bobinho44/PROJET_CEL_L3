@@ -10,79 +10,70 @@ import org.junit.jupiter.api.Test;
 
 class PersonTest {
 
-    private Person agent;
+    private Person agent1;
+    private Person agent2;
     private Person admin;
+    private Travel travel;
 
     @BeforeEach
     void setUp() {
-        agent = new Person("Cobaye1", Agent.INSTANCE);
+        agent1 = new Person("Cobaye1", Agent.INSTANCE);
+        agent2 = new Person("Kylian", Agent.INSTANCE);
         admin = new Person("Cobaye2", Admin.INSTANCE);
+        travel = new Travel(new Calendar(new Person("Cobaye3", Agent.INSTANCE)));
     }
 
     @Test
     void setName_SettingDone_True() {
-        agent.name().set("Alix");
+        Assertions.assertNotEquals("Alix", agent1.name().get());
 
-        Assertions.assertEquals("Alix", agent.name().get());
+        agent1.name().set("Alix");
+
+        Assertions.assertEquals("Alix", agent1.name().get());
     }
 
     @Test
     void setRole_PersonIsAgent_True() {
-        agent.role().set(Admin.INSTANCE);
+        Assertions.assertNotEquals(Admin.INSTANCE, agent1.role().get());
 
-        Assertions.assertEquals(Admin.INSTANCE, agent.role().get());
+        agent1.role().set(Admin.INSTANCE);
+
+        Assertions.assertEquals(Admin.INSTANCE, agent1.role().get());
     }
 
     @Test
     void setRole_PersonIsAdmin_True() {
+        Assertions.assertNotEquals(Agent.INSTANCE, admin.role().get());
+
         admin.role().set(Agent.INSTANCE);
 
         Assertions.assertEquals(Agent.INSTANCE, admin.role().get());
     }
 
     @Test
-    void getCalendar_PersonIsAgent_True() throws InvalidRoleException {
-        agent.calendar().set(new Calendar(agent));
+    void setCalendar_PersonIsAgent_True() {
+        Assertions.assertNull(agent1.calendar().get());
 
-        Assertions.assertEquals(agent, agent.calendar().get().getOwner());
-    }
+        agent1.calendar().set(new Calendar(agent1));
 
-    @Test
-    void setCalendar_PersonIsAgent_True() throws InvalidRoleException {
-        Calendar calendar = new Calendar(agent);
-        agent.calendar().set(calendar);
-
-        Assertions.assertEquals(calendar, agent.calendar().get());
+        Assertions.assertEquals(agent1, agent1.calendar().get().getOwner());
     }
 
     @Test
     void addTravelTo_PersonIsAdmin_True() throws MaximumSizeReachedException, InvalidRoleException {
-        Person agent2 = new Person("Cobaye2", Agent.INSTANCE);
-        Travel travel = new Travel(new Calendar(agent2));
-        agent.calendar().set(new Calendar(agent));
-        admin.addTravelTo(travel, agent);
+        Assertions.assertFalse(agent1.calendar().get().travels().contain(travel));
 
-        Assertions.assertTrue(agent.calendar().get().travels().contain(travel));
+        agent1.calendar().set(new Calendar(agent1));
+        admin.addTravelTo(travel, agent1);
+
+        Assertions.assertTrue(agent1.calendar().get().travels().contain(travel));
     }
 
     @Test
-    void getCalendar_PersonIsAnAdmin_ExceptionThrown() {
+    void useCalendar_PersonIsAnAdmin_ExceptionThrown() {
         InvalidRoleException exception = Assertions.assertThrows(
                 InvalidRoleException.class,
-                () -> admin.calendar().get()
-        );
-
-        Assertions.assertEquals("Invalid operation. Only agent have a calendar!", exception.getMessage());
-    }
-
-    @Test
-    void setCalendar_PersonIsAnAdmin_ExceptionThrown() {
-        InvalidRoleException exception = Assertions.assertThrows(
-                InvalidRoleException.class,
-                () -> {
-                    Calendar calendar = new Calendar(agent);
-                    admin.calendar().set(calendar);
-                }
+                () -> admin.calendar()
         );
 
         Assertions.assertEquals("Invalid operation. Only agent have a calendar!", exception.getMessage());
@@ -92,12 +83,7 @@ class PersonTest {
     void addTravelTo_PersonIsAnAgent_ExceptionThrown() {
         InvalidRoleException exception = Assertions.assertThrows(
                 InvalidRoleException.class,
-                () -> {
-                    Person agent2 = new Person("Kylian", Agent.INSTANCE);
-                    Calendar calendar = new Calendar(agent);
-                    Travel travel = new Travel(calendar);
-                    agent.addTravelTo(travel, agent2);
-                }
+                () -> agent1.addTravelTo(travel, agent2)
         );
 
         Assertions.assertEquals("Invalid operation. Only an admin can add travel to an agent!", exception.getMessage());

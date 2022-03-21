@@ -1,53 +1,70 @@
 package fr.unantes.sce.calendar;
 
 import fr.unantes.sce.exception.MaximumSizeReachedException;
-import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
-
-import java.util.ArrayList;
-import java.util.List;
+import fr.unantes.sce.exception.MinimumSizeReachedException;
+import fr.unantes.sce.wrapper.BothBoundedMultiValuedAttribute;
+import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
 
 /**
  * Travel goes from one place to another, with a departure date and an arrival date
  */
 public class Travel {
 
-    private List<Correspondence> steps = new ArrayList<>();
-    private final NullableMonoValuedAttribute<Calendar> parent = new NullableMonoValuedAttribute<>();
+    private static final int MAX_STEPS_NUMBER_IN_TRAVEL = 10;
+    private static final int MIN_STEPS_NUMBER_IN_TRAVEL = 1;
 
-    public Travel(Calendar parent) throws MaximumSizeReachedException {
-        setParent(parent);
+    private final BothBoundedMultiValuedAttribute<Correspondence> steps = new BothBoundedMultiValuedAttribute<>(MIN_STEPS_NUMBER_IN_TRAVEL, MAX_STEPS_NUMBER_IN_TRAVEL);
+    private final InitiallyEmptyMonoValuedAttribute<Calendar> parent = new InitiallyEmptyMonoValuedAttribute<>();
+
+    public Travel(Calendar parent) {
+        this.setParent(parent);
     }
 
-    public NullableMonoValuedAttribute<Calendar> parent() {
+    protected BothBoundedMultiValuedAttribute<Correspondence> steps() {
+        return steps;
+    }
+
+    public InitiallyEmptyMonoValuedAttribute<Calendar> parent() {
         return parent;
     }
 
-    public void setParent(Calendar parent) throws MaximumSizeReachedException {
-        if (parent().get() != null) {
-            parent().get().removeTravel(this);
+    public Correspondence getFirstStep() {
+        return steps.get(0);
+    }
+
+    public Correspondence getLastStep() {
+        return steps.get(steps.size() - 1);
+    }
+
+    public void addStep(Correspondence step) throws MaximumSizeReachedException {
+        if (stepIsAlreadyLinkedWithATravel(step)) {
+            step.travel().get().steps().basicRemove(step);
         }
+
+        steps().add(step);
+        step.travel().set(this);
+    }
+
+    public void removeStep(Correspondence step) throws MinimumSizeReachedException {
+        steps().remove(step);
+        step.travel().unset();
+    }
+
+    private boolean stepIsAlreadyLinkedWithATravel(Correspondence step) {
+        return step.travel().get() != null;
+    }
+
+    public void setParent(Calendar parent) {
+        if (isAlreadyLinkedWithACalendar()) {
+            parent().get().travels().basicRemove(this);
+        }
+
         parent().set(parent);
         parent.travels().add(this);
     }
 
-    public List<Correspondence> getSteps() {
-        return steps;
-    }
-
-    public Correspondence getFirstStep() {
-        return (Correspondence) steps.get(0);
-    }
-
-    public Correspondence getLastStep() {
-        return (Correspondence) steps.get(steps.size() - 1);
-    }
-
-    public boolean addCorrespondence(Correspondence step) {
-        return steps.add(step);
-    }
-
-    public boolean removeCorrespondence(Correspondence step) {
-        return steps.remove(step);
+    private boolean isAlreadyLinkedWithACalendar() {
+        return parent().get() != null;
     }
 
 }

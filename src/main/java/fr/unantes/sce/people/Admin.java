@@ -4,7 +4,7 @@ import fr.unantes.sce.calendar.Calendar;
 import fr.unantes.sce.calendar.Travel;
 import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
-import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
+import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
 
 public class Admin extends Role {
 
@@ -21,7 +21,7 @@ public class Admin extends Role {
      * {@Inherited}
      */
     @Override
-    public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
+    public InitiallyEmptyMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
         throw new InvalidRoleException("Invalid operation. Only agent have a calendar!");
     }
 

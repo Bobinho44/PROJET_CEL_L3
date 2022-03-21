@@ -4,8 +4,8 @@ import fr.unantes.sce.calendar.Calendar;
 import fr.unantes.sce.calendar.Travel;
 import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
-import fr.unantes.sce.wrapper.NonNullMonoValuedAttribute;
-import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
+import fr.unantes.sce.wrapper.MonoValuedAttribute;
+import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -15,8 +15,8 @@ import java.util.Objects;
  */
 public class Person {
 
-    private final NonNullMonoValuedAttribute<String> name;
-    private final NonNullMonoValuedAttribute<Role> role;
+    private final MonoValuedAttribute<String> name;
+    private final MonoValuedAttribute<Role> role;
 
     /**
      * Creates a new person
@@ -25,8 +25,8 @@ public class Person {
      * @param role the role
      */
     public Person(String name, Role role) {
-        this.name = new NonNullMonoValuedAttribute<>(name);
-        this.role = new NonNullMonoValuedAttribute<>(role);
+        this.name = new MonoValuedAttribute<>(name);
+        this.role = new MonoValuedAttribute<>(role);
     }
 
     /**
@@ -35,7 +35,7 @@ public class Person {
      * @return the name wrapper
      */
     @Nonnull
-    public NonNullMonoValuedAttribute<String> name() {
+    public MonoValuedAttribute<String> name() {
         return name;
     }
 
@@ -45,7 +45,7 @@ public class Person {
      * @return the role wrapper
      */
     @Nonnull
-    public NonNullMonoValuedAttribute<Role> role() {
+    public MonoValuedAttribute<Role> role() {
         return role;
     }
 
@@ -55,7 +55,7 @@ public class Person {
      * @return the calendar wrapper
      */
     @Nonnull
-    public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
+    public InitiallyEmptyMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
         return role.get().calendar();
     }
 

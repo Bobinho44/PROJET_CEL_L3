@@ -23,9 +23,10 @@ public class Calendar {
     }
 
     public void addTravel(Travel travel) throws MaximumSizeReachedException {
-        if (travel.parent().get() != null) {
-            travel.parent().get().removeTravel(travel);
+        if (travelIsAlreadyLinkedWithACalendar(travel)) {
+            travel.parent().get().travels().basicRemove(travel);
         }
+
         travels().add(travel);
         travel.parent().set(this);
     }
@@ -33,6 +34,10 @@ public class Calendar {
     public void removeTravel(Travel travel) {
         travels().remove(travel);
         travel.parent().unset();
+    }
+
+    private boolean travelIsAlreadyLinkedWithACalendar(Travel travel) {
+        return travel.parent().get() != null;
     }
 
     public Person getOwner() {
