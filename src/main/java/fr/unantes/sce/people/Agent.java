@@ -5,7 +5,7 @@ import fr.unantes.sce.calendar.Travel;
 import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
-public class Agent extends Role {
+public class Agent implements Role {
 
     public static final Role INSTANCE = new Agent();
 
@@ -20,8 +20,8 @@ public class Agent extends Role {
      * {@Inherited}
      */
     @Override
-    public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
-        return calendar;
+    public NullableMonoValuedAttribute<Calendar> calendar(Person agent) throws InvalidRoleException {
+        return agent.basicCalendar();
     }
 
     /**

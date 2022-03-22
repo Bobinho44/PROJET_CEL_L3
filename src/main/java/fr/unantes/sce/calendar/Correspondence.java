@@ -56,16 +56,17 @@ public class Correspondence {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Correspondence that = (Correspondence) o;
-        return Objects.equals(travel(), that.travel()) &&
-                Objects.equals(origin(), that.origin()) &&
-                Objects.equals(destination(), that.destination()) &&
-                Objects.equals(timeInterval(), that.timeInterval());
+        Correspondence correspondence = (Correspondence) o;
+        return Objects.equals(travel().get(), correspondence.travel().get()) &&
+                Objects.equals(origin().get(), correspondence.origin().get()) &&
+                Objects.equals(destination().get(), correspondence.destination().get()) &&
+                Objects.equals(timeInterval().getBegin(), correspondence.timeInterval().getBegin()) &&
+                Objects.equals(timeInterval().getEnd(), correspondence.timeInterval().getEnd());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(travel(), origin(), destination(), timeInterval());
+        return Objects.hash(travel().get(), origin().get(), destination().get(), timeInterval().getBegin(), timeInterval().getEnd());
     }
 
 }

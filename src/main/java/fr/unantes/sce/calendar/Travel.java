@@ -75,12 +75,12 @@ public class Travel {
         if (o == null || getClass() != o.getClass()) return false;
         Travel travel = (Travel) o;
         return Objects.equals(steps(), travel.steps()) &&
-                Objects.equals(parent(), travel.parent());
+                Objects.equals(parent().get(), travel.parent().get());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steps(), parent());
+        return Objects.hash(steps().get(), parent().get());
     }
 
 }

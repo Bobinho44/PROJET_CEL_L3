@@ -6,7 +6,9 @@ import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
-public class Admin extends Role {
+import java.util.Objects;
+
+public class Admin implements Role {
 
     public static final Role INSTANCE = new Admin();
 
@@ -21,7 +23,7 @@ public class Admin extends Role {
      * {@Inherited}
      */
     @Override
-    public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
+    public NullableMonoValuedAttribute<Calendar> calendar(Person agent) throws InvalidRoleException {
         throw new InvalidRoleException("Invalid operation. Only agent have a calendar!");
     }
 
@@ -30,7 +32,15 @@ public class Admin extends Role {
      */
     @Override
     public void addTravelTo(Travel travel, Person agent) throws InvalidRoleException, MaximumSizeReachedException {
+        if (agentIsNotLinkedWithACalendar(agent)) {
+            agent.basicCalendar().set(new Calendar(agent));
+        }
+
         agent.calendar().get().addTravel(travel);
+    }
+
+    private boolean agentIsNotLinkedWithACalendar(Person agent) {
+        return Objects.isNull(agent.basicCalendar().get());
     }
 
 }

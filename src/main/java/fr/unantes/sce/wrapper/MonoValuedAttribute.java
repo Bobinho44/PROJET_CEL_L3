@@ -10,7 +10,9 @@ public class MonoValuedAttribute<T> {
         this.value = value;
     }
 
-    protected MonoValuedAttribute() {}
+    protected MonoValuedAttribute() {
+        this.value = null;
+    }
 
     public T get() {
         return value;

@@ -2,6 +2,7 @@ package fr.unantes.sce.calendar;
 
 import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.people.Person;
+import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 import fr.unantes.sce.wrapper.UpperBoundedMultiValuedAttribute;
 
 import java.util.Objects;
@@ -14,14 +15,18 @@ public class Calendar {
     private static final int MAX_TRAVEL_NUMBER_IN_CALENDAR = 10;
 
     private final UpperBoundedMultiValuedAttribute<Travel> travels = new UpperBoundedMultiValuedAttribute<>(MAX_TRAVEL_NUMBER_IN_CALENDAR);
-    private Person owner;
+    private final NullableMonoValuedAttribute<Person> owner = new NullableMonoValuedAttribute<>();
 
     public Calendar(Person owner) {
-        this.owner = owner;
+        setOwner(owner);
     }
 
     protected UpperBoundedMultiValuedAttribute<Travel> travels() {
         return travels;
+    }
+
+    public NullableMonoValuedAttribute<Person> owner() {
+        return owner;
     }
 
     public void addTravel(Travel travel) throws MaximumSizeReachedException {
@@ -43,15 +48,20 @@ public class Calendar {
     }
 
     private boolean travelIsAlreadyLinkedWithACalendar(Travel travel) {
-        return travel.parent().get() != null;
-    }
-
-    public Person getOwner() {
-        return owner;
+        return Objects.nonNull(travel.parent().get());
     }
 
     public void setOwner(Person owner) {
-        this.owner = owner;
+        if (ownerIsAlreadyLinkedWithACalendar(owner)) {
+            owner.calendar().get().owner().unset();
+        }
+
+        owner().set(owner);
+        owner.calendar().set(this);
+    }
+
+    private boolean ownerIsAlreadyLinkedWithACalendar(Person owner) {
+        return Objects.nonNull(owner.calendar().get());
     }
 
     @Override
@@ -60,11 +70,12 @@ public class Calendar {
         if (o == null || getClass() != o.getClass()) return false;
         Calendar calendar = (Calendar) o;
         return Objects.equals(travels(), calendar.travels()) &&
-                Objects.equals(getOwner(), calendar.getOwner());
+                Objects.equals(owner().get(), calendar.owner().get());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(travels(), getOwner());
+        return Objects.hash(travels().get(), owner().get());
     }
+
 }

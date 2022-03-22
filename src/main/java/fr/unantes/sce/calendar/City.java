@@ -30,13 +30,13 @@ public class City {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         City city = (City) o;
-        return Objects.equals(country(), city.country()) &&
-                Objects.equals(name(), city.name());
+        return Objects.equals(country().get(), city.country().get()) &&
+                Objects.equals(name().get(), city.name().get());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(country(), name());
+        return Objects.hash(country().get(), name().get());
     }
 
 }

@@ -6,9 +6,9 @@ import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
-public abstract class Role {
+import java.util.Objects;
 
-    protected final NullableMonoValuedAttribute<Calendar> calendar = new NullableMonoValuedAttribute<>();
+public interface Role {
 
     /**
      * Gets the calendar wrapper
@@ -16,7 +16,7 @@ public abstract class Role {
      * @return the calendar wrapper
      * @throws InvalidRoleException the role is not agent
      */
-    public abstract NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException;
+    public NullableMonoValuedAttribute<Calendar> calendar(Person agent) throws InvalidRoleException;
 
     /**
      * Adds travel to an agent
@@ -26,6 +26,6 @@ public abstract class Role {
      * @throws InvalidRoleException        the person is not an admin
      * @throws MaximumSizeReachedException the calendar of this agent is already full
      */
-    public abstract void addTravelTo(Travel travel, Person agent) throws InvalidRoleException, MaximumSizeReachedException;
+    public void addTravelTo(Travel travel, Person agent) throws InvalidRoleException, MaximumSizeReachedException;
 
 }

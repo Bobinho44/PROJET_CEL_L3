@@ -17,6 +17,7 @@ public class Person {
 
     private final MonoValuedAttribute<String> name;
     private final MonoValuedAttribute<Role> role;
+    private final NullableMonoValuedAttribute<Calendar> calendar = new NullableMonoValuedAttribute<>();
 
     /**
      * Creates a new person
@@ -55,8 +56,12 @@ public class Person {
      * @return the calendar wrapper
      */
     @Nonnull
+    protected NullableMonoValuedAttribute<Calendar> basicCalendar() {
+        return calendar;
+    }
+
     public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
-        return role.get().calendar();
+        return role().get().calendar(this);
     }
 
     /**
@@ -68,26 +73,21 @@ public class Person {
      * @throws MaximumSizeReachedException the calendar of this agent is already full
      */
     public void addTravelTo(Travel travel, Person agent) throws InvalidRoleException, MaximumSizeReachedException {
-        role.get().addTravelTo(travel, agent);
+        role().get().addTravelTo(travel, agent);
     }
 
-    /**
-     * {@Inherited}
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(name, person.name) && Objects.equals(role, person.role);
+        return Objects.equals(name().get(), person.name().get()) &&
+                Objects.equals(role().get(), person.role().get());
     }
 
-    /**
-     * {@Inherited}
-     */
     @Override
     public int hashCode() {
-        return Objects.hash(name, role);
+        return Objects.hash(name().get(), role().get());
     }
 
 }
