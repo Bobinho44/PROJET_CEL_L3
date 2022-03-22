@@ -16,7 +16,7 @@ public class UpperBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T>
         this.maxSize = maxSize;
     }
 
-    public int getMaxSize() {
+    private int getMaxSize() {
         return maxSize;
     }
 
@@ -28,15 +28,15 @@ public class UpperBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T>
      */
     @Override
     public void add(T value) throws MaximumSizeReachedException {
-        if (!canAdd()) {
+        if (cannotAdd()) {
             throw new MaximumSizeReachedException("Invalid operation. The multiValuedAttribute is already full!");
         }
 
         super.add(value);
     }
 
-    public boolean canAdd() {
-        return get().size() < getMaxSize();
+    private boolean cannotAdd() {
+        return get().size() >= getMaxSize();
     }
 
 }

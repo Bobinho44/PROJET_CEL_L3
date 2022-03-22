@@ -5,7 +5,7 @@ import fr.unantes.sce.calendar.Travel;
 import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.wrapper.MonoValuedAttribute;
-import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
+import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -55,7 +55,7 @@ public class Person {
      * @return the calendar wrapper
      */
     @Nonnull
-    public InitiallyEmptyMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
+    public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
         return role.get().calendar();
     }
 

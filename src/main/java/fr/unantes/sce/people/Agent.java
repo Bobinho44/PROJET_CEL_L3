@@ -3,7 +3,7 @@ package fr.unantes.sce.people;
 import fr.unantes.sce.calendar.Calendar;
 import fr.unantes.sce.calendar.Travel;
 import fr.unantes.sce.exception.InvalidRoleException;
-import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
+import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
 public class Agent extends Role {
 
@@ -20,7 +20,7 @@ public class Agent extends Role {
      * {@Inherited}
      */
     @Override
-    public InitiallyEmptyMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
+    public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
         return calendar;
     }
 

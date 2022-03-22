@@ -4,6 +4,8 @@ import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.people.Person;
 import fr.unantes.sce.wrapper.UpperBoundedMultiValuedAttribute;
 
+import java.util.Objects;
+
 /**
  * A Calendar stores a list of travels for an agent
  */
@@ -18,7 +20,7 @@ public class Calendar {
         this.owner = owner;
     }
 
-    public UpperBoundedMultiValuedAttribute<Travel> travels() {
+    protected UpperBoundedMultiValuedAttribute<Travel> travels() {
         return travels;
     }
 
@@ -36,6 +38,10 @@ public class Calendar {
         travel.parent().unset();
     }
 
+    public boolean containTravel(Travel travel) {
+        return travels().contain(travel);
+    }
+
     private boolean travelIsAlreadyLinkedWithACalendar(Travel travel) {
         return travel.parent().get() != null;
     }
@@ -48,4 +54,17 @@ public class Calendar {
         this.owner = owner;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Calendar calendar = (Calendar) o;
+        return Objects.equals(travels(), calendar.travels()) &&
+                Objects.equals(getOwner(), calendar.getOwner());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(travels(), getOwner());
+    }
 }

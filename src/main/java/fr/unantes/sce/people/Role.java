@@ -4,11 +4,11 @@ import fr.unantes.sce.calendar.Calendar;
 import fr.unantes.sce.calendar.Travel;
 import fr.unantes.sce.exception.InvalidRoleException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
-import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
+import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
 public abstract class Role {
 
-    protected final InitiallyEmptyMonoValuedAttribute<Calendar> calendar = new InitiallyEmptyMonoValuedAttribute<>();
+    protected final NullableMonoValuedAttribute<Calendar> calendar = new NullableMonoValuedAttribute<>();
 
     /**
      * Gets the calendar wrapper
@@ -16,7 +16,7 @@ public abstract class Role {
      * @return the calendar wrapper
      * @throws InvalidRoleException the role is not agent
      */
-    public abstract InitiallyEmptyMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException;
+    public abstract NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException;
 
     /**
      * Adds travel to an agent

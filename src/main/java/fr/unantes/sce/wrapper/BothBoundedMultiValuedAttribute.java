@@ -19,11 +19,11 @@ public class BothBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T> 
         this.maxSize = maxSize;
     }
 
-    public int getMinSize() {
+    private int getMinSize() {
         return minSize;
     }
 
-    public int getMaxSize() {
+    private int getMaxSize() {
         return maxSize;
     }
 
@@ -35,28 +35,28 @@ public class BothBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T> 
      */
     @Override
     public void add(T value) throws MaximumSizeReachedException {
-        if (!canAdd()) {
+        if (cannotAdd()) {
             throw new MaximumSizeReachedException("Invalid operation. The multiValuedAttribute is already full!");
         }
 
         super.add(value);
     }
 
-    public boolean canAdd() {
-        return get().size() < getMaxSize();
+    private boolean cannotAdd() {
+        return get().size() >= getMaxSize();
     }
 
     @Override
     public void remove(T value) throws MinimumSizeReachedException {
-        if (!canRemove()) {
+        if (cannotRemove()) {
             throw new MinimumSizeReachedException("Invalid operation. The multiValuedAttribute has reached its minimum size!");
         }
 
         super.remove(value);
     }
 
-    public boolean canRemove() {
-        return get().size() > getMinSize();
+    private boolean cannotRemove() {
+        return get().size() <= getMinSize();
     }
 
 }

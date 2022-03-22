@@ -1,7 +1,5 @@
 package fr.unantes.sce.calendar;
 
-import fr.unantes.sce.exception.MaximumSizeReachedException;
-import fr.unantes.sce.exception.MinimumSizeReachedException;
 import fr.unantes.sce.people.Agent;
 import fr.unantes.sce.people.Person;
 import org.junit.jupiter.api.Assertions;
@@ -89,8 +87,8 @@ class TravelTest {
 
     @Test
     void addStep_Add11Steps_ExceptionThrown() {
-        MaximumSizeReachedException exception = Assertions.assertThrows(
-                MaximumSizeReachedException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> {
                     for (Correspondence step : steps) {
                         travel1.addStep(step);
@@ -112,11 +110,11 @@ class TravelTest {
 
     @Test
     void removeStep_BidirectionalAssociationRevoked_True() {
-    Assertions.assertEquals(travel2, correspondence3.travel().get());
+        Assertions.assertEquals(travel2, correspondence3.travel().get());
 
-    travel2.removeStep(correspondence3);
+        travel2.removeStep(correspondence3);
 
-    Assertions.assertNotEquals(travel2, correspondence3.travel().get());
+        Assertions.assertNotEquals(travel2, correspondence3.travel().get());
     }
 
     @Test
@@ -126,8 +124,8 @@ class TravelTest {
 
     @Test
     void removeStep_StepIsNotLinkedWithTheTravel_ExceptionThrown() {
-        IllegalArgumentException exception = Assertions.assertThrows(
-                IllegalArgumentException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> travel2.removeStep(correspondence2)
         );
 
@@ -136,8 +134,8 @@ class TravelTest {
 
     @Test
     void removeStep_StepsWillBeEmpty_ExceptionThrown() {
-        MinimumSizeReachedException exception = Assertions.assertThrows(
-                MinimumSizeReachedException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> travel3.removeStep(correspondence5)
         );
 

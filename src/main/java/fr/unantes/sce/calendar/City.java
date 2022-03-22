@@ -1,33 +1,28 @@
 package fr.unantes.sce.calendar;
 
+import fr.unantes.sce.wrapper.MonoValuedAttribute;
+
 import java.util.Objects;
 
 /**
  * A city
  */
 public class City {
-    public String country;
-    public String name;
+
+    private final MonoValuedAttribute<String> country;
+    private final MonoValuedAttribute<String> name;
 
     public City(String country, String name) {
-        this.country = country;
-        this.name = name;
+        this.country = new MonoValuedAttribute<>(country);
+        this.name = new MonoValuedAttribute<>(name);
     }
 
-    public String getCountry() {
+    public MonoValuedAttribute<String> country() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getName() {
+    public MonoValuedAttribute<String> name() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -35,12 +30,13 @@ public class City {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         City city = (City) o;
-        return getCountry().equals(city.getCountry()) &&
-                getName().equals(city.getName());
+        return Objects.equals(country(), city.country()) &&
+                Objects.equals(name(), city.name());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCountry(), getName());
+        return Objects.hash(country(), name());
     }
+
 }

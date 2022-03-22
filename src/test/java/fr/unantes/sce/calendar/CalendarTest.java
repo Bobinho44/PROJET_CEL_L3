@@ -1,6 +1,5 @@
 package fr.unantes.sce.calendar;
 
-import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.people.Agent;
 import fr.unantes.sce.people.Person;
 import org.junit.jupiter.api.Assertions;
@@ -51,8 +50,8 @@ class CalendarTest {
 
     @Test
     void addTravel_Add11Travels_ExceptionThrown() {
-        MaximumSizeReachedException exception = Assertions.assertThrows(
-                MaximumSizeReachedException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> {
                     for (Travel travel : travels) {
                         calendar.addTravel(travel);
@@ -93,8 +92,8 @@ class CalendarTest {
 
     @Test
     void removeTravel_TravelIsNotLinked_ExceptionThrown() {
-        IllegalArgumentException exception = Assertions.assertThrows(
-                IllegalArgumentException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> calendar.removeTravel(travel2)
         );
 

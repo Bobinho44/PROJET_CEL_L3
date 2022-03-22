@@ -1,34 +1,42 @@
 package fr.unantes.sce.calendar;
 
-import fr.unantes.sce.exception.InvalidArgumentException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
-import fr.unantes.sce.wrapper.InitiallyEmptyMonoValuedAttribute;
+import fr.unantes.sce.wrapper.Interval;
+import fr.unantes.sce.wrapper.MonoValuedAttribute;
+import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 
 public class Correspondence {
 
-    private final InitiallyEmptyMonoValuedAttribute<Travel> travel = new InitiallyEmptyMonoValuedAttribute<>();
-    private City startCity;
-    private City destinationCity;
-    private LocalDate startTime;
-    private LocalDate arrivalTime;
+    private final NullableMonoValuedAttribute<Travel> travel = new NullableMonoValuedAttribute<>();
+    private final MonoValuedAttribute<City> origin;
+    private final MonoValuedAttribute<City> destination;
+    private final Interval<ChronoLocalDate> timeInterval;
 
-    public Correspondence(Travel travel, City startCity, City destinationCity, LocalDate startTime, LocalDate arrivalTime) throws InvalidArgumentException, MaximumSizeReachedException {
-        if (startTime.isAfter(arrivalTime)) {
-            throw new InvalidArgumentException("arrivalTime is before startTime!");
-        }
-
+    public Correspondence(Travel travel, City startCity, City destinationCity, LocalDate startTime, LocalDate arrivalTime) {
         this.setTravel(travel);
-        this.startCity = startCity;
-        this.destinationCity = destinationCity;
-        this.startTime = startTime;
-        this.arrivalTime = arrivalTime;
+        this.origin = new MonoValuedAttribute<>(startCity);
+        this.destination = new MonoValuedAttribute<>(destinationCity);
+        this.timeInterval = new Interval<>(startTime, arrivalTime);
     }
 
-    public InitiallyEmptyMonoValuedAttribute<Travel> travel() {
+    protected NullableMonoValuedAttribute<Travel> travel() {
         return travel;
+    }
+
+    public MonoValuedAttribute<City> origin() {
+        return origin;
+    }
+
+    public MonoValuedAttribute<City> destination() {
+        return destination;
+    }
+
+    public Interval<ChronoLocalDate> timeInterval() {
+        return timeInterval;
     }
 
     public void setTravel(Travel travel) throws MaximumSizeReachedException {
@@ -44,57 +52,20 @@ public class Correspondence {
         return travel().get() != null;
     }
 
-    public City getStartCity() {
-        return startCity;
-    }
-
-    public void setStartCity(City startCity) {
-        this.startCity = startCity;
-    }
-
-    public City getDestinationCity() {
-        return destinationCity;
-    }
-
-    public void setDestinationCity(City destinationCity) {
-        this.destinationCity = destinationCity;
-    }
-
-    public LocalDate getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDate startTime) throws InvalidArgumentException {
-        if (startTime.isAfter(getArrivalTime())) {
-            throw new InvalidArgumentException("Invalid argument. StartTime is after arrivalTime!");
-        }
-
-        this.startTime = startTime;
-    }
-
-    public LocalDate getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(LocalDate arrivalTime) throws InvalidArgumentException {
-        if (arrivalTime.isBefore(getStartTime())) {
-            throw new InvalidArgumentException("Invalid argument. ArrivalTime is before startTime!");
-        }
-
-        this.arrivalTime = arrivalTime;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Correspondence that = (Correspondence) o;
-        return Objects.equals(travel, that.travel) && Objects.equals(startCity, that.startCity) && Objects.equals(destinationCity, that.destinationCity) && Objects.equals(startTime, that.startTime) && Objects.equals(arrivalTime, that.arrivalTime);
+        return Objects.equals(travel(), that.travel()) &&
+                Objects.equals(origin(), that.origin()) &&
+                Objects.equals(destination(), that.destination()) &&
+                Objects.equals(timeInterval(), that.timeInterval());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(travel, startCity, destinationCity, startTime, arrivalTime);
+        return Objects.hash(travel(), origin(), destination(), timeInterval());
     }
 
 }

@@ -61,18 +61,18 @@ class PersonTest {
 
     @Test
     void addTravelTo_PersonIsAdmin_True() throws MaximumSizeReachedException, InvalidRoleException {
-        Assertions.assertFalse(agent1.calendar().get().travels().contain(travel));
+        Assertions.assertFalse(agent1.calendar().get().containTravel(travel));
 
         agent1.calendar().set(new Calendar(agent1));
         admin.addTravelTo(travel, agent1);
 
-        Assertions.assertTrue(agent1.calendar().get().travels().contain(travel));
+        Assertions.assertTrue(agent1.calendar().get().containTravel(travel));
     }
 
     @Test
     void useCalendar_PersonIsAnAdmin_ExceptionThrown() {
-        InvalidRoleException exception = Assertions.assertThrows(
-                InvalidRoleException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> admin.calendar()
         );
 
@@ -81,8 +81,8 @@ class PersonTest {
 
     @Test
     void addTravelTo_PersonIsAnAgent_ExceptionThrown() {
-        InvalidRoleException exception = Assertions.assertThrows(
-                InvalidRoleException.class,
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
                 () -> agent1.addTravelTo(travel, agent2)
         );
 
