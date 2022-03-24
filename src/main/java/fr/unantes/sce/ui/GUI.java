@@ -8,23 +8,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import javax.annotation.Nonnull;
 import java.util.logging.Logger;
 
 public class GUI extends Application  {
 
     private static final Logger logger = Logger.getLogger("Travel Agency");
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void start(Stage stage) {
+    public void start(@Nonnull Stage stage) {
         GridPane root = new GridPane();
 
-        // name box
+        //Name box
         TextField field1 = new TextField();
         Label lbl1 = new Label("Name:");
         lbl1.setLabelFor(field1);
         Button loginButton = new Button();
 
-        // password box
+        //Password box
         TextField field2 = new TextField();
         Label lbl2 = new Label("Password:");
         lbl1.setLabelFor(field2);

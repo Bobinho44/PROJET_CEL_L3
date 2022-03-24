@@ -2,37 +2,51 @@ package fr.unantes.sce.security;
 
 import fr.unantes.sce.people.Person;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * PasswordManager manages the logic of users
+ */
 public class UserManager {
 
+    /**
+     * Fields
+     */
     private final Map<String, Person> namesToUsers = new HashMap<>();
     private final PasswordManager passwordManager = new PasswordManager();
 
-    private Optional<Person> getUser(Person person) {
+    /**
+     * Gets the registered user
+     *
+     * @param person the user to search for
+     * @return an optional value of the found user associated to the person
+     */
+    @Nonnull
+    private Optional<Person> getUser(@Nonnull Person person) {
         return Optional.ofNullable(namesToUsers.get(person.name().get()));
     }
 
     /**
-     * Test if an user is registered in the manager
+     * Checks if the user is already registered
      *
-     * @param person - User to search for
-     * @return True if the user is registered, False otherwise
+     * @param person the user to search for
+     * @return true the user is already registered, false otherwise
      */
-    public boolean hasUser(Person person) {
+    public boolean hasUser(@Nonnull Person person) {
         return getUser(person).isPresent();
     }
 
     /**
-     * Add a new user to the manager
+     * Registers the user
      *
-     * @param person   - User to add
-     * @param password - User's password
-     * @throws IllegalArgumentException the user is already registered
+     * @param person   the registered user
+     * @param password the password associated to the user
+     * @throws IllegalArgumentException if the user is already registered
      */
-    public void addUser(Person person, String password) throws IllegalArgumentException {
+    public void addUser(@Nonnull Person person, @Nonnull String password) {
         if (hasUser(person)) {
             throw new IllegalArgumentException("Invalid argument: the person is already registered.");
         }
@@ -43,30 +57,28 @@ public class UserManager {
     }
 
     /**
-     * Remove a user from the manager
+     * Unregisters the user
      *
-     * @param person - User to remove
-     * @throws IllegalArgumentException the user is not registered
+     * @param person the unregistered user
+     * @throws IllegalArgumentException if the user is not registered
      */
-    public void removeUser(Person person) throws IllegalArgumentException {
-        Optional<Person> foundPerson = getUser(person);
+    public void removeUser(@Nonnull Person person) throws IllegalArgumentException {
+        Person foundPerson = getUser(person).orElseThrow(() ->
+                new IllegalArgumentException("Invalid argument: the person is not registered."));
 
-        if (foundPerson.isEmpty()) {
-            throw new IllegalArgumentException("Invalid argument: the person is not registered.");
-        }
-
-        namesToUsers.remove(foundPerson.get().name().get());
-        passwordManager.unsetUserPassword(foundPerson.get());
+        namesToUsers.remove(foundPerson.name().get());
+        passwordManager.unsetUserPassword(foundPerson);
     }
 
+
     /**
-     * Valid a password
+     * Valids the user password
      *
-     * @param person   - User associated to the password
-     * @param password - password to validate
-     * @return True if the password is valid, false otherwise
+     * @param person   the checked user
+     * @param password the checked password
+     * @return true if the password is valid, false otherwise
      */
-    public boolean validatePassword(Person person, String password) {
+    public boolean validatePassword(@Nonnull Person person, @Nonnull String password) {
         return passwordManager.validatePassword(person, password);
     }
 

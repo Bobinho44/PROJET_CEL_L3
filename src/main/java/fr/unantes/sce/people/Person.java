@@ -15,6 +15,9 @@ import java.util.Objects;
  */
 public class Person {
 
+    /**
+     * Fields
+     */
     private final MonoValuedAttribute<String> name;
     private final MonoValuedAttribute<Role> role;
     private final NullableMonoValuedAttribute<Calendar> calendar = new NullableMonoValuedAttribute<>();
@@ -22,10 +25,10 @@ public class Person {
     /**
      * Creates a new person
      *
-     * @param name the name
-     * @param role the role
+     * @param name the name associated to the person
+     * @param role the role associated to the person
      */
-    public Person(String name, Role role) {
+    public Person(@Nonnull String name, @Nonnull Role role) {
         this.name = new MonoValuedAttribute<>(name);
         this.role = new MonoValuedAttribute<>(role);
     }
@@ -60,22 +63,32 @@ public class Person {
         return calendar;
     }
 
+    /**
+     * Gets the calendar wrapper of an agent
+     *
+     * @return the calendar wrapper
+     * @throws InvalidRoleException if the person is not an agent
+     */
+    @Nonnull
     public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
         return role().get().calendar(this);
     }
 
     /**
-     * Adds travel to an agent
+     * Adds the travel to an agent
      *
-     * @param travel the travel
-     * @param agent  the agent
-     * @throws InvalidRoleException        the person is not an admin
-     * @throws MaximumSizeReachedException the calendar of this agent is already full
+     * @param travel the added travel
+     * @param agent  the added agent
+     * @throws InvalidRoleException        if the person is not an admin
+     * @throws MaximumSizeReachedException if the calendar of this agent is already full
      */
-    public void addTravelTo(Travel travel, Person agent) throws InvalidRoleException, MaximumSizeReachedException {
+    public void addTravelTo(@Nonnull Travel travel, @Nonnull Person agent) throws InvalidRoleException, MaximumSizeReachedException {
         role().get().addTravelTo(travel, agent);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +98,9 @@ public class Person {
                 Objects.equals(role().get(), person.role().get());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(name().get(), role().get());

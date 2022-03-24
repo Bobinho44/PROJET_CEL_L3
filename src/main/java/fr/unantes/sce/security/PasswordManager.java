@@ -1,61 +1,95 @@
 package fr.unantes.sce.security;
 
+import fr.unantes.sce.exception.AESEncryptionException;
 import fr.unantes.sce.people.Person;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * PasswordManager manages the logic of the users' passwords
+ */
 public class PasswordManager {
 
+    /**
+     * Fields
+     */
     private final Map<String, String> usersToPasswords = new HashMap<>();
 
-    protected PasswordManager() {}
-
-    private Optional<String> getPassword(String user) {
-        return Optional.ofNullable(usersToPasswords.get(user));
+    /**
+     * Creates a new password manager
+     */
+    protected PasswordManager() {
     }
 
-    protected void setUserPassword(Person person, String password) {
+    /**
+     * Gets the user password
+     *
+     * @param person the user
+     * @return an optional value of the found password
+     */
+    @Nonnull
+    private Optional<String> getPassword(@Nonnull Person person) {
+        return Optional.ofNullable(usersToPasswords.get(person.name().get()));
+    }
+
+    /**
+     * Sets the user password
+     *
+     * @param person   the affected user
+     * @param password the password associated to the user
+     */
+    protected void setUserPassword(@Nonnull Person person, @Nonnull String password) throws AESEncryptionException {
         usersToPasswords.put(person.name().get(), encryptPassword(password));
     }
 
-    protected void unsetUserPassword(Person person) {
+    /**
+     * Unsets the user password
+     *
+     * @param person the affected user
+     */
+    protected void unsetUserPassword(@Nonnull Person person) {
         usersToPasswords.remove(person.name().get());
     }
 
     /**
-     * Valid a password
-     * @param person - User associated to the password
-     * @param password - password to validate
-     * @return True if the password is valid, false otherwise
+     * Valids a password
+     *
+     * @param person   the user associated to the password
+     * @param password the password to validate
+     * @return true if the password is valid, false otherwise
      */
-    protected boolean validatePassword(Person person, String password) {
-        Optional<String> foundPassword = getPassword(person.name().get());
-
-        if (foundPassword.isEmpty()) {
-            return false;
-        }
-
-        return decryptPassword(foundPassword.get()).equals(password);
+    protected boolean validatePassword(@Nonnull Person person, @Nonnull String password) throws AESEncryptionException {
+        return getPassword(person).map(foundPassword -> decryptPassword(foundPassword).equals(password))
+                .orElse(false);
     }
 
     /**
-     * Encrypt a password
-     * @param password - Password to encrypt
-     * @return Encrypted password
+     * Encrypts a password
+     *
+     * @param password the password to encrypt
+     * @return the encrypted password
+     * @throws AESEncryptionException if there was an error with the encryption algorithm
      */
-    private String encryptPassword(String password) {
-        return AES.encrypt(password);
+    @Nonnull
+    private String encryptPassword(@Nonnull String password) throws AESEncryptionException {
+        return AES.encrypt(password).orElseThrow(() ->
+                new AESEncryptionException("Invalid operation: There was a problem with the deciphering!"));
     }
 
     /**
-     * Decrypt a password
-     * @param encrypted - Password to decrypt
-     * @return Decrypted password
+     * Decrypts a password
+     *
+     * @param encrypted the password to decrypt
+     * @return the decrypted password
+     * @throws AESEncryptionException if there was an error with the encryption algorithm
      */
-    private String decryptPassword(String encrypted) {
-        return AES.decrypt(encrypted);
+    @Nonnull
+    private String decryptPassword(@Nonnull String encrypted) throws AESEncryptionException {
+        return AES.decrypt(encrypted).orElseThrow(() ->
+                new AESEncryptionException("Invalid operation: There was a problem with the encryption!"));
     }
 
 }

@@ -3,51 +3,46 @@ package fr.unantes.sce.wrapper;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.exception.MinimumSizeReachedException;
 
-public class BothBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T> {
+import javax.annotation.Nonnull;
 
-    private final int maxSize;
+/**
+ * BothBoundedMultiValuedAttribute is a multivalued attribute wrapper of multiplicity [minSize, maxSize]
+ */
+public class BothBoundedMultiValuedAttribute<T> extends UpperBoundedMultiValuedAttribute<T> {
+
+    /**
+     * Fields
+     */
     private final int minSize;
 
     /**
-     * Creates a new upper bounder multi valued attribute
+     * Creates a new upper bounder multivalued attribute wrapper
      *
-     * @param maxSize the upper bound
+     * @param minSize the lower bound size
+     * @param maxSize the upper bound size
      */
     public BothBoundedMultiValuedAttribute(int minSize, int maxSize) {
-        super();
+        super(maxSize);
         this.minSize = minSize;
-        this.maxSize = maxSize;
     }
 
+    /**
+     * Gets the lower bound size
+     *
+     * @return the lower bound size
+     */
     private int getMinSize() {
         return minSize;
     }
 
-    private int getMaxSize() {
-        return maxSize;
-    }
-
     /**
-     * Adds a value to the value's list (within the limit of maxSize element)
+     * Removes the value from the list (within the limit of minSize element)
      *
-     * @param value the added value
-     * @throws MaximumSizeReachedException the value's list is full
+     * @param value the removed value
+     * @throws MaximumSizeReachedException if the list has reached its minimum size
      */
     @Override
-    public void add(T value) throws MaximumSizeReachedException {
-        if (cannotAdd()) {
-            throw new MaximumSizeReachedException("Invalid operation. The multiValuedAttribute is already full!");
-        }
-
-        super.add(value);
-    }
-
-    private boolean cannotAdd() {
-        return get().size() >= getMaxSize();
-    }
-
-    @Override
-    public void remove(T value) throws MinimumSizeReachedException {
+    public void remove(@Nonnull T value) throws MinimumSizeReachedException {
         if (cannotRemove()) {
             throw new MinimumSizeReachedException("Invalid operation. The multiValuedAttribute has reached its minimum size!");
         }
@@ -55,6 +50,11 @@ public class BothBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T> 
         super.remove(value);
     }
 
+    /**
+     * Checks if a value cannot be removed from the list
+     *
+     * @return true if a value cannot be removed from the list, false otherwise
+     */
     private boolean cannotRemove() {
         return get().size() <= getMinSize();
     }

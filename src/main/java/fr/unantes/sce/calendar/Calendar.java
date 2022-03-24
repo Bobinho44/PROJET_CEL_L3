@@ -5,6 +5,7 @@ import fr.unantes.sce.people.Person;
 import fr.unantes.sce.wrapper.NullableMonoValuedAttribute;
 import fr.unantes.sce.wrapper.UpperBoundedMultiValuedAttribute;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -12,24 +13,53 @@ import java.util.Objects;
  */
 public class Calendar {
 
+    /**
+     * The maximum number of trips that a calendar can contain
+     */
     private static final int MAX_TRAVEL_NUMBER_IN_CALENDAR = 10;
 
+    /**
+     * Fields
+     */
     private final UpperBoundedMultiValuedAttribute<Travel> travels = new UpperBoundedMultiValuedAttribute<>(MAX_TRAVEL_NUMBER_IN_CALENDAR);
     private final NullableMonoValuedAttribute<Person> owner = new NullableMonoValuedAttribute<>();
 
-    public Calendar(Person owner) {
+    /**
+     * Creates a new calendar
+     *
+     * @param owner the owner associated to the calendar
+     */
+    public Calendar(@Nonnull Person owner) {
         setOwner(owner);
     }
 
+    /**
+     * Gets the travels wrapper
+     *
+     * @return the travels wrapper
+     */
+    @Nonnull
     protected UpperBoundedMultiValuedAttribute<Travel> travels() {
         return travels;
     }
 
+    /**
+     * Gets the owner wrapper
+     *
+     * @return the owner wrapper
+     */
+    @Nonnull
     public NullableMonoValuedAttribute<Person> owner() {
         return owner;
     }
 
-    public void addTravel(Travel travel) throws MaximumSizeReachedException {
+    /**
+     * Adds the travel to the calendar
+     *
+     * @param travel the added travel
+     * @throws MaximumSizeReachedException if the travel list is full
+     */
+    public void addTravel(@Nonnull Travel travel) throws MaximumSizeReachedException {
         if (travelIsAlreadyLinkedWithACalendar(travel)) {
             travel.parent().get().travels().basicRemove(travel);
         }
@@ -38,20 +68,42 @@ public class Calendar {
         travel.parent().set(this);
     }
 
-    public void removeTravel(Travel travel) {
+    /**
+     * Removes the travel from the calendar
+     *
+     * @param travel the removed travel
+     */
+    public void removeTravel(@Nonnull Travel travel) {
         travels().remove(travel);
         travel.parent().unset();
     }
 
-    public boolean containTravel(Travel travel) {
+    /**
+     * Checks if the calendar contain the travel
+     *
+     * @param travel the checked travel
+     * @return true if the calendar contain the travel, false otherwise
+     */
+    public boolean containTravel(@Nonnull Travel travel) {
         return travels().contain(travel);
     }
 
-    private boolean travelIsAlreadyLinkedWithACalendar(Travel travel) {
+    /**
+     * Checks if the travel is already linked with another calendar
+     *
+     * @param travel the checked travel
+     * @return true if the travel is already linked with another calendar, false otherwise
+     */
+    private boolean travelIsAlreadyLinkedWithACalendar(@Nonnull Travel travel) {
         return Objects.nonNull(travel.parent().get());
     }
 
-    public void setOwner(Person owner) {
+    /**
+     * Sets the new calendar owner
+     *
+     * @param owner the new calendar owner
+     */
+    public void setOwner(@Nonnull Person owner) {
         if (ownerIsAlreadyLinkedWithACalendar(owner)) {
             owner.calendar().get().owner().unset();
         }
@@ -60,10 +112,19 @@ public class Calendar {
         owner.calendar().set(this);
     }
 
-    private boolean ownerIsAlreadyLinkedWithACalendar(Person owner) {
+    /**
+     * Checks if the owner is already linked with another calendar
+     *
+     * @param owner the checked owner
+     * @return true the owner is already linked with another calendar, false otherwise
+     */
+    private boolean ownerIsAlreadyLinkedWithACalendar(@Nonnull Person owner) {
         return Objects.nonNull(owner.calendar().get());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +134,9 @@ public class Calendar {
                 Objects.equals(owner().get(), calendar.owner().get());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(travels().get(), owner().get());
