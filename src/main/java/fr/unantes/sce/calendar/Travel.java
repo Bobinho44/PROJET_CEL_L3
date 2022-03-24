@@ -1,5 +1,6 @@
 package fr.unantes.sce.calendar;
 
+import fr.unantes.sce.exception.InconsistentArgumentException;
 import fr.unantes.sce.exception.MaximumSizeReachedException;
 import fr.unantes.sce.exception.MinimumSizeReachedException;
 import fr.unantes.sce.wrapper.BothBoundedMultiValuedAttribute;
@@ -38,7 +39,11 @@ public class Travel {
         return steps().get(steps().size() - 1);
     }
 
-    public void addStep(Correspondence step) throws MaximumSizeReachedException {
+    public void addStep(Correspondence step) throws MaximumSizeReachedException, InconsistentArgumentException {
+        if (isTheNewStepInconsistent(step)) {
+            throw new InconsistentArgumentException("Invalid operation. The step is inconsistent with the current steps of the travel!");
+        }
+
         if (stepIsAlreadyLinkedWithATravel(step)) {
             step.travel().get().steps().basicRemove(step);
         }
@@ -50,6 +55,11 @@ public class Travel {
     public void removeStep(Correspondence step) throws MinimumSizeReachedException {
         steps().remove(step);
         step.travel().unset();
+    }
+
+
+    private boolean isTheNewStepInconsistent(Correspondence step) {
+        return !steps().isEmpty() && getLastStep().timeInterval().isEndedAfterItsBegin(step.timeInterval());
     }
 
     private boolean stepIsAlreadyLinkedWithATravel(Correspondence step) {

@@ -35,12 +35,12 @@ class TravelTest {
         travel2 = new Travel(new Calendar(person));
         travel3 = new Travel(new Calendar(person));
         correspondence1 = new Correspondence(new Travel(new Calendar(person)), city1, city2, date1, date2);
-        correspondence2 = new Correspondence(new Travel(new Calendar(person)), city2, city1, date1, date2);
+        correspondence2 = new Correspondence(new Travel(new Calendar(person)), city2, city1, date1.plusDays(1), date2.plusDays(1));
         correspondence3 = new Correspondence(travel2, city2, city1, date1, date2);
-        travel2.addStep(new Correspondence(travel2, city2, city1, date1, date2));
-        correspondence5 = new Correspondence(travel3, city2, city1, date1, date2);
-        for (int i = 0; i < 11; i++) {
-            steps.add(new Correspondence(new Travel(new Calendar(person)), city1, city2, date1, date2));
+        travel2.addStep(new Correspondence(new Travel(new Calendar(person)), city2, city1, date1.plusDays(1), date2.plusDays(1)));
+        correspondence5 = new Correspondence(travel3, city2, city1, date1.plusDays(5), date2.plusDays(5));
+        for (int i = 2; i < 13; i++) {
+            steps.add(new Correspondence(new Travel(new Calendar(person)), city1, city2, date1.plusDays(i), date2.plusDays(i)));
         }
     }
 
@@ -140,6 +140,16 @@ class TravelTest {
         );
 
         Assertions.assertEquals("Invalid operation. The multiValuedAttribute has reached its minimum size!", exception.getMessage());
+    }
+
+    @Test
+    void qccStep_StepsIsInconsistent_ExceptionThrown() {
+        Exception exception = Assertions.assertThrows(
+                Exception.class,
+                () -> travel2.addStep(correspondence1)
+        );
+
+        Assertions.assertEquals("Invalid operation. The step is inconsistent with the current steps of the travel!", exception.getMessage());
     }
 
 }

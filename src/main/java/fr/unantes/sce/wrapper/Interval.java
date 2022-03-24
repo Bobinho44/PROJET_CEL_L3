@@ -40,4 +40,8 @@ public class Interval<T extends Comparable<T>> {
         this.end = end;
     }
 
+    public boolean isEndedAfterItsBegin(Interval<T> other) {
+        return getEnd().compareTo(other.getBegin()) > 0;
+    }
+
 }
