@@ -2,63 +2,60 @@ package fr.unantes.sce.security;
 
 import fr.unantes.sce.people.Agent;
 import fr.unantes.sce.people.Person;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.InvalidClassException;
-
-import static org.atlanmod.testing.Assertions.assertThat;
-
 class UserManagerTest {
-    private UserManager m1;
+
+    private UserManager userManager;
+    private Person person1;
+    private Person person2;
 
     @BeforeEach
     void setUp() {
-        m1 = new UserManager();
-    }
-
-    @AfterEach
-    void tearDown() {
-        m1 = null;
-    }
-
-    @Test
-    void hasUser_agentTom_True() throws InvalidClassException {
-        Person a1 = new Person("Tom", Agent.INSTANCE);
-        m1.addUser(a1, "123");
-        assertThat(m1.hasUser(a1));
+        userManager = new UserManager();
+        person1 = new Person("Tom", Agent.INSTANCE);
+        person2 = new Person("Bob", Agent.INSTANCE);
+        userManager.addUser(person2, "abc");
     }
 
     @Test
-    void removeUser_agentTome_True() throws InvalidClassException {
-        Person a1 = new Person("Tom", Agent.INSTANCE);
-        m1.addUser(a1, "123");
-        m1.removeUser(a1);
-        assertThat(!(m1.hasUser(a1)));
+    void hasUser_UserIsAdded_True() {
+        Assertions.assertTrue(userManager.hasUser(person2));
     }
 
     @Test
-    void hasUser_agentGeorge_False() throws InvalidClassException {
-        assertThat(!(m1.hasUser(new Person("George", Agent.INSTANCE))));
+    void hasUser_UserIsNotAdded_False() {
+        Assertions.assertFalse(userManager.hasUser(person1));
     }
 
     @Test
-    void validatePassword_ofTom_True() throws InvalidClassException {
-        Person a1 = new Person("Tom", Agent.INSTANCE);
-        m1.addUser(a1, "123");
-        assertThat(m1.validatePassword(a1, "123"));
+    void addUser_addingDone_True() {
+        Assertions.assertFalse(userManager.hasUser(person1));
+
+        userManager.addUser(person1, "123");
+
+        Assertions.assertTrue(userManager.hasUser(person1));
     }
 
     @Test
-    void validatePassword_ofTom_False() throws InvalidClassException {
-        Person a1 = new Person("Tom", Agent.INSTANCE);
-        m1.addUser(a1, "123");
-        assertThat(!(m1.validatePassword(a1, "113")));
+    void removeUser_removingDone_False() {
+        Assertions.assertTrue(userManager.hasUser(person2));
+
+        userManager.removeUser(person2);
+
+        Assertions.assertFalse(userManager.hasUser(person2));
     }
 
     @Test
-    void decryptEncrypt_123_True() throws InvalidClassException {
-        assertThat("123" == m1.getDecryptPassword(m1.getEncryptPassword("123")));
+    void validatePassword_validPassword_True() {
+        Assertions.assertTrue(userManager.validatePassword(person2, "abc"));
     }
+
+    @Test
+    void validatePassword_invalidPassword_False() {
+        Assertions.assertFalse(userManager.validatePassword(person2, "Abc"));
+    }
+
 }

@@ -1,6 +1,5 @@
 package fr.unantes.sce.ui;
-import fr.unantes.sce.people.Person;
-import fr.unantes.sce.security.UserManager;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,13 +8,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import fr.unantes.sce.security.UserManager;
+import java.util.logging.Logger;
 
 public class GUI extends Application  {
-    UserManager loggingManager = new UserManager();
+
+    private static final Logger logger = Logger.getLogger("Travel Agency");
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         GridPane root = new GridPane();
 
         // name box
@@ -29,15 +29,8 @@ public class GUI extends Application  {
         Label lbl2 = new Label("Password:");
         lbl1.setLabelFor(field2);
 
-
         loginButton.setText("Login");
-        loginButton.setOnAction(event -> {
-            if(field1.getText()=="" || field2.getText()==""){
-                System.out.println("Thanks to fill both fields !");
-            } else {
-            System.out.println("login with name=" + field1.getText() + " and password=" + field2.getText());
-            }
-        });
+        loginButton.setOnAction(event -> logger.info("login with name=" + field1.getText() + " and password=" + field2.getText()));
 
         root.add(lbl1, 0, 0);
         root.add(field1, 2, 0);
@@ -49,4 +42,5 @@ public class GUI extends Application  {
         stage.setScene(scene);
         stage.show();
     }
+
 }
