@@ -64,7 +64,7 @@ public class Calendar {
             travel.parent().get().travels().basicRemove(travel);
         }
 
-        travels().add(travel);
+        this.travels.add(travel);
         travel.parent().set(this);
     }
 
@@ -74,7 +74,7 @@ public class Calendar {
      * @param travel the removed travel
      */
     public void removeTravel(@Nonnull Travel travel) {
-        travels().remove(travel);
+        this.travels.remove(travel);
         travel.parent().unset();
     }
 
@@ -85,7 +85,7 @@ public class Calendar {
      * @return true if the calendar contain the travel, false otherwise
      */
     public boolean containTravel(@Nonnull Travel travel) {
-        return travels().contain(travel);
+        return this.travels.contain(travel);
     }
 
     /**
@@ -108,7 +108,7 @@ public class Calendar {
             owner.calendar().get().owner().unset();
         }
 
-        owner().set(owner);
+        this.owner.set(owner);
         owner.calendar().set(this);
     }
 
@@ -130,8 +130,8 @@ public class Calendar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Calendar calendar = (Calendar) o;
-        return Objects.equals(travels(), calendar.travels()) &&
-                Objects.equals(owner().get(), calendar.owner().get());
+        return Objects.equals(travels, calendar.travels()) &&
+                Objects.equals(owner.get(), calendar.owner().get());
     }
 
     /**
@@ -139,7 +139,7 @@ public class Calendar {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(travels().get(), owner().get());
+        return Objects.hash(travels, owner.get());
     }
 
 }

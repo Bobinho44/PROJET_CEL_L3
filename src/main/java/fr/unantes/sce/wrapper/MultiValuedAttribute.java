@@ -15,16 +15,6 @@ public class MultiValuedAttribute<T> {
     private final List<T> values = new ArrayList<>();
 
     /**
-     * Gets the list
-     *
-     * @return the list
-     */
-    @Nonnull
-    public List<T> get() {
-        return values;
-    }
-
-    /**
      * Gets the i nth value of the list
      *
      * @param i the index of the desired value
@@ -32,7 +22,7 @@ public class MultiValuedAttribute<T> {
      */
     @Nonnull
     public T get(int i) {
-        return values.get(i);
+        return this.values.get(i);
     }
 
     /**
@@ -41,7 +31,7 @@ public class MultiValuedAttribute<T> {
      * @return the list size
      */
     public int size() {
-        return values.size();
+        return this.values.size();
     }
 
     /**
@@ -50,7 +40,7 @@ public class MultiValuedAttribute<T> {
      * @return true if the list is empty, false otherwise
      */
     public boolean isEmpty() {
-        return values.isEmpty();
+        return this.values.isEmpty();
     }
 
     /**
@@ -60,7 +50,7 @@ public class MultiValuedAttribute<T> {
      * @return true if the list contain the value, false otherwise
      */
     public boolean contain(@Nonnull T value) {
-        return values.contains(value);
+        return this.values.contains(value);
     }
 
     /**
@@ -69,7 +59,7 @@ public class MultiValuedAttribute<T> {
      * @param value the added value
      */
     public void add(@Nonnull T value) {
-        values.add(value);
+        this.values.add(value);
     }
 
     /**
@@ -78,7 +68,7 @@ public class MultiValuedAttribute<T> {
      * @param value the removed value
      */
     public void basicRemove(@Nonnull T value) {
-        values.remove(value);
+        this.values.remove(value);
     }
 
     /**
@@ -92,7 +82,7 @@ public class MultiValuedAttribute<T> {
             throw new IllegalArgumentException("Invalid operation. The multiValuedAttribute does not contain this value!");
         }
 
-        values.remove(value);
+        this.values.remove(value);
     }
 
 }

@@ -71,7 +71,7 @@ public class Person {
      */
     @Nonnull
     public NullableMonoValuedAttribute<Calendar> calendar() throws InvalidRoleException {
-        return role().get().calendar(this);
+        return this.role.get().calendar(this);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Person {
      * @throws MaximumSizeReachedException if the calendar of this agent is already full
      */
     public void addTravelTo(@Nonnull Travel travel, @Nonnull Person agent) throws InvalidRoleException, MaximumSizeReachedException {
-        role().get().addTravelTo(travel, agent);
+        this.role.get().addTravelTo(travel, agent);
     }
 
     /**
@@ -94,8 +94,8 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(name().get(), person.name().get()) &&
-                Objects.equals(role().get(), person.role().get());
+        return Objects.equals(name.get(), person.name().get()) &&
+                Objects.equals(role.get(), person.role().get());
     }
 
     /**
@@ -103,7 +103,7 @@ public class Person {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name().get(), role().get());
+        return Objects.hash(name.get(), role.get());
     }
 
 }

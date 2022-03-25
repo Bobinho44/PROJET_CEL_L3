@@ -54,7 +54,7 @@ public class Interval<T extends Comparable<T>> {
      * @throws InconsistentArgumentException if the new beginning does not precede the end
      */
     public void setBegin(@Nonnull T begin) throws InconsistentArgumentException {
-        if (begin.compareTo(getEnd()) > 0) {
+        if (begin.compareTo(this.end) > 0) {
             throw new InconsistentArgumentException("Invalid operation. The begin is after the Interval end!");
         }
 
@@ -67,7 +67,7 @@ public class Interval<T extends Comparable<T>> {
      * @throws InconsistentArgumentException if the beginning does not precede the new end
      */
     public void setEnd(@Nonnull T end) throws InconsistentArgumentException {
-        if (getBegin().compareTo(end) > 0) {
+        if (this.begin.compareTo(end) > 0) {
             throw new InconsistentArgumentException("Invalid operation. The end is before the Interval begin!");
         }
 
@@ -80,7 +80,7 @@ public class Interval<T extends Comparable<T>> {
      * @return true if the beginning of the second interval precedes the beginning of the first, false otherwise
      */
     public boolean isEndedAfterItsBegin(@Nonnull Interval<T> other) {
-        return getEnd().compareTo(other.getBegin()) > 0;
+        return this.end.compareTo(other.getBegin()) > 0;
     }
 
 }

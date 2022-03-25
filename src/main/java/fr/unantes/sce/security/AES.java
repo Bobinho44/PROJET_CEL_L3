@@ -1,15 +1,15 @@
 package fr.unantes.sce.security;
 
+import javax.annotation.Nonnull;
+import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
-
-import javax.annotation.Nonnull;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * AES is a class of encryption and decipherment
@@ -19,7 +19,28 @@ public class AES {
     /**
      * Encryption key
      */
-    private final static String SECRET_KEY = "CodeSuperSecretTravelAgency";
+    private static final String SECRET_KEY = "CodeSuperSecretTravelAgency";
+
+    /**
+     * AES key size
+     */
+    private static final int AES_KEY_SIZE = 16;
+
+    /**
+     * GC% Tag length
+     */
+    private static final int GCM_TAG_LENGTH = 128;
+
+    /**
+     * Random GCM nonce length
+     */
+    private static final int GCM_NONCE_LENGTH = 12;
+
+    /**
+     * Creates a new AES encryptor
+     */
+    private AES() {
+    }
 
     /**
      * Gets the AES key
@@ -27,18 +48,26 @@ public class AES {
      * @return the AES key
      */
     @Nonnull
-    private static SecretKeySpec getKey() {
+    private static SecretKeySpec getKey() throws NoSuchAlgorithmException {
         byte[] key = AES.SECRET_KEY.getBytes(StandardCharsets.UTF_8);
-
-        try {
-            MessageDigest sha = MessageDigest.getInstance("SHA-1");
-            key = sha.digest(key);
-            key = Arrays.copyOf(key, 16);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
+        MessageDigest sha = MessageDigest.getInstance("SHA-1");
+        key = sha.digest(key);
+        key = Arrays.copyOf(key, GCM_TAG_LENGTH);
         return new SecretKeySpec(key, "AES");
+    }
+
+    /**
+     * Gets the AES spec
+     *
+     * @return the AES spec
+     */
+    @Nonnull
+    public static GCMParameterSpec getSpec() throws NoSuchAlgorithmException {
+        byte[] nonce = AES.SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        MessageDigest sha = MessageDigest.getInstance("SHA-1");
+        nonce = sha.digest(nonce);
+        nonce = Arrays.copyOf(nonce, GCM_NONCE_LENGTH);
+        return new GCMParameterSpec(AES_KEY_SIZE, nonce);
     }
 
     /**
@@ -52,9 +81,9 @@ public class AES {
         Optional<String> encrypted = Optional.empty();
 
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, getKey());
-            encrypted = Optional.of(Base64.getEncoder().encodeToString(cipher.doFinal(toEncrypt.getBytes(StandardCharsets.UTF_8))));
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, getKey(), getSpec());
+            encrypted = Optional.of(Base64.getEncoder().encodeToString(cipher.doFinal(toEncrypt.getBytes())));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,8 +102,8 @@ public class AES {
         Optional<String> decrypted = Optional.empty();
 
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, getKey());
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, getKey(), getSpec());
             decrypted = Optional.of(new String(cipher.doFinal(Base64.getDecoder().decode(toDecrypt))));
         } catch (Exception e) {
             e.printStackTrace();

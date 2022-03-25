@@ -127,24 +127,4 @@ class CorrespondenceTest {
         Assertions.assertEquals(city3, correspondence.destination().get());
     }
 
-    @Test
-    void setOrigin_CityIsNull_ExceptionThrown() {
-        Exception exception = Assertions.assertThrows(
-                Exception.class,
-                () -> correspondence.origin().set(null)
-        );
-
-        Assertions.assertEquals("Invalid operation. The value is null!", exception.getMessage());
-    }
-
-    @Test
-    void setDestination_CityIsNull_ExceptionThrown() {
-        Exception exception = Assertions.assertThrows(
-                Exception.class,
-                () -> correspondence.destination().set(null)
-        );
-
-        Assertions.assertEquals("Invalid operation. The value is null!", exception.getMessage());
-    }
-
 }

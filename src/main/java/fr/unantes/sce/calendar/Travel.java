@@ -66,7 +66,7 @@ public class Travel {
      */
     @Nonnull
     public Correspondence getFirstStep() {
-        return steps().get(0);
+        return this.steps.get(0);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Travel {
      */
     @Nonnull
     public Correspondence getLastStep() {
-        return steps().get(steps().size() - 1);
+        return this.steps.get(this.steps.size() - 1);
     }
 
     /**
@@ -95,7 +95,7 @@ public class Travel {
             step.travel().get().steps().basicRemove(step);
         }
 
-        steps().add(step);
+        this.steps.add(step);
         step.travel().set(this);
     }
 
@@ -106,7 +106,7 @@ public class Travel {
      * @throws MinimumSizeReachedException if the travel list has reached its minimum number of steps
      */
     public void removeStep(@Nonnull Correspondence step) throws MinimumSizeReachedException {
-        steps().remove(step);
+        this.steps.remove(step);
         step.travel().unset();
     }
 
@@ -117,7 +117,7 @@ public class Travel {
      * @return true if the step beginning starts before the end of the last current step, false otherwise
      */
     private boolean isTheNewStepInconsistent(@Nonnull Correspondence step) {
-        return !steps().isEmpty() && getLastStep().timeInterval().isEndedAfterItsBegin(step.timeInterval());
+        return !this.steps.isEmpty() && getLastStep().timeInterval().isEndedAfterItsBegin(step.timeInterval());
     }
 
     /**
@@ -137,10 +137,10 @@ public class Travel {
      */
     public void setParent(@Nonnull Calendar parent) {
         if (isAlreadyLinkedWithACalendar()) {
-            parent().get().travels().basicRemove(this);
+            this.parent.get().travels().basicRemove(this);
         }
 
-        parent().set(parent);
+        this.parent.set(parent);
         parent.travels().add(this);
     }
 
@@ -150,7 +150,7 @@ public class Travel {
      * @return true if the travel is already linked with another calendar, false otherwise
      */
     private boolean isAlreadyLinkedWithACalendar() {
-        return parent().get() != null;
+        return Objects.nonNull(this.parent.get());
     }
 
     /**
@@ -161,8 +161,8 @@ public class Travel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Travel travel = (Travel) o;
-        return Objects.equals(steps(), travel.steps()) &&
-                Objects.equals(parent().get(), travel.parent().get());
+        return Objects.equals(steps, travel.steps()) &&
+                Objects.equals(parent.get(), travel.parent().get());
     }
 
     /**
@@ -170,7 +170,7 @@ public class Travel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(steps().get(), parent().get());
+        return Objects.hash(steps, parent().get());
     }
 
 }

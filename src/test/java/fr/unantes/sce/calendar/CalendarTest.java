@@ -80,14 +80,14 @@ class CalendarTest {
 
     @Test
     void getTravel_GettingDone_true() {
-        Assertions.assertEquals(1, calendar.travels().get().size());
+        Assertions.assertEquals(1, calendar.travels().size());
 
         for (int i = 0; i < 7; i++) {
             Travel travel2 = new Travel(calendar);
             calendar.addTravel(travel2);
         }
 
-        Assertions.assertEquals(8, calendar.travels().get().size());
+        Assertions.assertEquals(8, calendar.travels().size());
     }
 
     @Test

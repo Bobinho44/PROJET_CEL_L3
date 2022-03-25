@@ -27,15 +27,6 @@ public class BothBoundedMultiValuedAttribute<T> extends UpperBoundedMultiValuedA
     }
 
     /**
-     * Gets the lower bound size
-     *
-     * @return the lower bound size
-     */
-    private int getMinSize() {
-        return minSize;
-    }
-
-    /**
      * Removes the value from the list (within the limit of minSize element)
      *
      * @param value the removed value
@@ -56,7 +47,7 @@ public class BothBoundedMultiValuedAttribute<T> extends UpperBoundedMultiValuedA
      * @return true if a value cannot be removed from the list, false otherwise
      */
     private boolean cannotRemove() {
-        return get().size() <= getMinSize();
+        return size() <= this.minSize;
     }
 
 }

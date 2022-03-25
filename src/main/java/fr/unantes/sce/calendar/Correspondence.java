@@ -87,10 +87,10 @@ public class Correspondence {
      */
     public void setTravel(@Nonnull Travel travel) throws MaximumSizeReachedException {
         if (isAlreadyLinkedWithATravel()) {
-            travel().get().steps().basicRemove(this);
+            this.travel.get().steps().basicRemove(this);
         }
 
-        travel().set(travel);
+        this.travel.set(travel);
         travel.steps().add(this);
     }
 
@@ -100,7 +100,7 @@ public class Correspondence {
      * @return true if the correspondence is already linked with another travel, false otherwise
      */
     private boolean isAlreadyLinkedWithATravel() {
-        return travel().get() != null;
+        return Objects.nonNull(this.travel.get());
     }
 
     /**
@@ -111,11 +111,11 @@ public class Correspondence {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Correspondence correspondence = (Correspondence) o;
-        return Objects.equals(travel().get(), correspondence.travel().get()) &&
-                Objects.equals(origin().get(), correspondence.origin().get()) &&
-                Objects.equals(destination().get(), correspondence.destination().get()) &&
-                Objects.equals(timeInterval().getBegin(), correspondence.timeInterval().getBegin()) &&
-                Objects.equals(timeInterval().getEnd(), correspondence.timeInterval().getEnd());
+        return Objects.equals(travel.get(), correspondence.travel().get()) &&
+                Objects.equals(origin.get(), correspondence.origin().get()) &&
+                Objects.equals(destination.get(), correspondence.destination().get()) &&
+                Objects.equals(timeInterval.getBegin(), correspondence.timeInterval().getBegin()) &&
+                Objects.equals(timeInterval.getEnd(), correspondence.timeInterval().getEnd());
     }
 
     /**
@@ -123,7 +123,7 @@ public class Correspondence {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(travel().get(), origin().get(), destination().get(), timeInterval().getBegin(), timeInterval().getEnd());
+        return Objects.hash(travel.get(), origin.get(), destination.get(), timeInterval.getBegin(), timeInterval.getEnd());
     }
 
 }

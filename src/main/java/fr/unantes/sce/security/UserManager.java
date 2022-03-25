@@ -26,7 +26,7 @@ public class UserManager {
      */
     @Nonnull
     private Optional<Person> getUser(@Nonnull Person person) {
-        return Optional.ofNullable(namesToUsers.get(person.name().get()));
+        return Optional.ofNullable(this.namesToUsers.get(person.name().get()));
     }
 
     /**
@@ -51,8 +51,8 @@ public class UserManager {
             throw new IllegalArgumentException("Invalid argument: the person is already registered.");
         }
 
-        namesToUsers.put(person.name().get(), person);
-        passwordManager.setUserPassword(person, password);
+        this.namesToUsers.put(person.name().get(), person);
+        this.passwordManager.setUserPassword(person, password);
 
     }
 
@@ -66,10 +66,9 @@ public class UserManager {
         Person foundPerson = getUser(person).orElseThrow(() ->
                 new IllegalArgumentException("Invalid argument: the person is not registered."));
 
-        namesToUsers.remove(foundPerson.name().get());
-        passwordManager.unsetUserPassword(foundPerson);
+        this.namesToUsers.remove(foundPerson.name().get());
+        this.passwordManager.unsetUserPassword(foundPerson);
     }
-
 
     /**
      * Valids the user password
@@ -79,7 +78,7 @@ public class UserManager {
      * @return true if the password is valid, false otherwise
      */
     public boolean validatePassword(@Nonnull Person person, @Nonnull String password) {
-        return passwordManager.validatePassword(person, password);
+        return this.passwordManager.validatePassword(person, password);
     }
 
 }

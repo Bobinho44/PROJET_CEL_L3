@@ -55,8 +55,8 @@ public class City {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         City city = (City) o;
-        return Objects.equals(country().get(), city.country().get()) &&
-                Objects.equals(name().get(), city.name().get());
+        return Objects.equals(country.get(), city.country().get()) &&
+                Objects.equals(name.get(), city.name().get());
     }
 
     /**
@@ -64,7 +64,7 @@ public class City {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(country().get(), name().get());
+        return Objects.hash(country.get(), name.get());
     }
 
 }

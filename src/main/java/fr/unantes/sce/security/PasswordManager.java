@@ -32,7 +32,7 @@ public class PasswordManager {
      */
     @Nonnull
     private Optional<String> getPassword(@Nonnull Person person) {
-        return Optional.ofNullable(usersToPasswords.get(person.name().get()));
+        return Optional.ofNullable(this.usersToPasswords.get(person.name().get()));
     }
 
     /**
@@ -42,7 +42,7 @@ public class PasswordManager {
      * @param password the password associated to the user
      */
     protected void setUserPassword(@Nonnull Person person, @Nonnull String password) throws AESEncryptionException {
-        usersToPasswords.put(person.name().get(), encryptPassword(password));
+        this.usersToPasswords.put(person.name().get(), encryptPassword(password));
     }
 
     /**
@@ -51,7 +51,7 @@ public class PasswordManager {
      * @param person the affected user
      */
     protected void unsetUserPassword(@Nonnull Person person) {
-        usersToPasswords.remove(person.name().get());
+        this.usersToPasswords.remove(person.name().get());
     }
 
     /**

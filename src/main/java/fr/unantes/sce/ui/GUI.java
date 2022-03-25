@@ -34,7 +34,8 @@ public class GUI extends Application  {
         lbl1.setLabelFor(field2);
 
         loginButton.setText("Login");
-        loginButton.setOnAction(event -> logger.info("login with name=" + field1.getText() + " and password=" + field2.getText()));
+        loginButton.setOnAction(event ->
+                GUI.logger.info("login with name=" + field1.getText() + " and password=" + field2.getText()));
 
         root.add(lbl1, 0, 0);
         root.add(field1, 2, 0);

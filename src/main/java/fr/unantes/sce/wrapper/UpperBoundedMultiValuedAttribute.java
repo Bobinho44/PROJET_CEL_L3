@@ -25,15 +25,6 @@ public class UpperBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T>
     }
 
     /**
-     * Gets the upper bound size
-     *
-     * @return the upper bound size
-     */
-    private int getMaxSize() {
-        return maxSize;
-    }
-
-    /**
      * Adds the value to the list (within the limit of maxSize element)
      *
      * @param value the added value
@@ -54,7 +45,7 @@ public class UpperBoundedMultiValuedAttribute<T> extends MultiValuedAttribute<T>
      * @return true if a value cannot be added to the list, false otherwise
      */
     private boolean cannotAdd() {
-        return get().size() >= getMaxSize();
+        return size() >= this.maxSize;
     }
 
 }

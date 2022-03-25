@@ -36,24 +36,4 @@ class CityTest {
         Assertions.assertEquals(new City("France", "Nantes"), city);
     }
 
-    @Test
-    void setCountry_CountryIsNull_ExceptionThrown() {
-        Exception exception = Assertions.assertThrows(
-                Exception.class,
-                () -> city.country().set(null)
-        );
-
-        Assertions.assertEquals("Invalid operation. The value is null!", exception.getMessage());
-    }
-
-    @Test
-    void setName_NameIsNull_ExceptionThrown() {
-        Exception exception = Assertions.assertThrows(
-                Exception.class,
-                () -> city.name().set(null)
-        );
-
-        Assertions.assertEquals("Invalid operation. The value is null!", exception.getMessage());
-    }
-
 }
